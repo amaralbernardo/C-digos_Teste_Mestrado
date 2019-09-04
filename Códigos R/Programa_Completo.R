@@ -1,4 +1,4 @@
-#Caso os packages n„o existem aquando a utilizaÁ„o do programa, s„o adicionados
+#Caso os packages n√£o existem aquando a utiliza√ß√£o do programa, s√£o adicionados
 if(!require(rcompanion)){install.packages("rcompanion")}
 if(!require(FSA)){install.packages("FSA")}
 if(!require(haven)){install.packages("haven")}
@@ -21,12 +21,12 @@ library(nortest)
 library(prodlim)
 library(grid)
 
-#Bibliotecas requeridas para a utilizaÁ„o do interface gr·fico
+#Bibliotecas requeridas para a utiliza√ß√£o do interface gr√°fico
 require(mgcv)
 require(gWidgets)
 options(guiToolkit="RGtk2")
 
-#FunÁ„o que cria ponteiros. Os ponteiros servem para que as vari·veis que tenham esta caracterÌstica sejam globais dentro do programa atÈ ao seu encerramento
+#Fun√ß√£o que cria ponteiros. Os ponteiros servem para que as vari√°veis que tenham esta caracter√≠stica sejam globais dentro do programa at√© ao seu encerramento
 novo_ponteiro<-function(valor_inserir)
 {  
   object<-new.env(parent=globalenv())  
@@ -36,13 +36,13 @@ novo_ponteiro<-function(valor_inserir)
   return(object)  
 }
 
-#FunÁ„o para atualizar o valor do ponteiro
+#Fun√ß√£o para atualizar o valor do ponteiro
 atualizar_ponteiro<-function (object, ...) 
 {
   UseMethod("atualizar_ponteiro")   
 }
 
-#MÈtodo para atualizar o valor do ponteiro
+#M√©todo para atualizar o valor do ponteiro
 atualizar_ponteiro.pointer<-function(object,novo_valor)
 {
   if (!is(object, "pointer")) 
@@ -53,31 +53,31 @@ atualizar_ponteiro.pointer<-function(object,novo_valor)
 }
 
 
-#FunÁ„o que devolve um array que contÈm as divisıes que se pretende fazer na qtd_EBs_regi
+#Fun√ß√£o que devolve um array que cont√©m as divis√µes que se pretende fazer na qtd_EBs_regi
 funcao_divisao<-function(min_valor, max_valor)
 {
   num_grupos<-1
   while (num_grupos<=1 | num_grupos>=6)
   {
     div<-c()
-    valor<-ginput("N˙mero de divisıes (2 a 5)",text="",title="Divisıes", icon="question")
+    valor<-ginput("N√∫mero de divis√µes (2 a 5)",text="",title="Divis√µes", icon="question")
     if (is.na(valor))
     {
       return(c(-1))
     }
     num_grupos<-strtoi(valor)
-    #Se cancelar a opÁ„o n„o se fez nenhuma alteraÁ„o
+    #Se cancelar a op√ß√£o n√£o se fez nenhuma altera√ß√£o
     if (is.na(num_grupos))
     {
-      gmessage("Valor inv·lido!", title="Erro", icon="error")
+      gmessage("Valor inv√°lido!", title="Erro", icon="error")
       num_grupos<-0
     }
     #Valor introduzido tem de ser entre 2 e 5
     else if (num_grupos>=6 | num_grupos<=1)
     {
-      gmessage("Valor inv·lido!", title="Erro", icon="error")
+      gmessage("Valor inv√°lido!", title="Erro", icon="error")
     }
-    else #ConstuÁ„o dos intervalos
+    else #Constu√ß√£o dos intervalos
     {
       div<-c(min_valor)
       i<-1
@@ -85,12 +85,12 @@ funcao_divisao<-function(min_valor, max_valor)
       while (i<num_grupos)
       {
         string<-paste("Introduze o extremo superior do ", i, sep="")
-        string<-paste(string, "∫ intervalo (valor entre ", sep="")
+        string<-paste(string, "¬∫ intervalo (valor entre ", sep="")
         string<-paste(string, aux_div, sep="")
         string<-paste(string, " e ", sep="")
         string<-paste(string, max_valor-(num_grupos-i), sep="")
         string<-paste(string, ")", sep="")
-        valor<-ginput(string, text="", title=paste(i, "∫ intervalo",sep=""), icon="question")
+        valor<-ginput(string, text="", title=paste(i, "¬∫ intervalo",sep=""), icon="question")
         if (is.na(valor))
         {
           return(c(-1))
@@ -98,7 +98,7 @@ funcao_divisao<-function(min_valor, max_valor)
         divisao<-strtoi(valor)
         if (is.na(divisao))
         {
-          gmessage("Valor inv·lido!", title="Erro",
+          gmessage("Valor inv√°lido!", title="Erro",
                    icon="error")
         }
         else if (divisao>=aux_div & divisao<(max_valor-(num_grupos-i)))
@@ -120,7 +120,7 @@ funcao_divisao<-function(min_valor, max_valor)
         }
         else
         {
-          gmessage("Valor inv·lido!", title="Erro",
+          gmessage("Valor inv√°lido!", title="Erro",
                    icon="error")
         }
       }
@@ -130,25 +130,25 @@ funcao_divisao<-function(min_valor, max_valor)
   return (div)
 }
 
-#FunÁ„o que verifica se todas as divisıes realizadas tÍm pelo menos um elemento
+#Fun√ß√£o que verifica se todas as divis√µes realizadas t√™m pelo menos um elemento
 funcao_verificar_divisoes<-function(tabela,div)
 {
-  #O primeiro e o ˙ltimo intervalo tÍm sempre, pelo menos um elemento.
+  #O primeiro e o √∫ltimo intervalo t√™m sempre, pelo menos um elemento.
   i<-2
   tamanho_div<-length(div)
   while (i < (tamanho_div-1))
   {
-    #Se a tabela n„o contiver nenhum DTC com o n˙mero de EBs do intervalo selecionado, o utilizador tem hipÛtese de, ou cancelar as divisıes, ou juntar o intervalo sem dados com o intervalo seguinte
+    #Se a tabela n√£o contiver nenhum DTC com o n√∫mero de EBs do intervalo selecionado, o utilizador tem hip√≥tese de, ou cancelar as divis√µes, ou juntar o intervalo sem dados com o intervalo seguinte
     if(empty(tabela[tabela[["qtd_EBs_regi"]]<=div[i+1] & tabela[["qtd_EBs_regi"]]>div[i],]))
     {
-      string<-paste("N„o existem DTCs com o n˙mero de EBs ", div[i], sep="")
+      string<-paste("N√£o existem DTCs com o n√∫mero de EBs ", div[i], sep="")
       string<-paste(string, " a ", sep="")
       string<-paste(string, div[i+1], sep="")
-      string<-paste(string, ". Ao clicar no 'ok', este intervalo ir·-se juntar com o intervalo ", sep="")
+      string<-paste(string, ". Ao clicar no 'ok', este intervalo ir√°-se juntar com o intervalo ", sep="")
       string<-paste(string, div[i+1], sep="")
       string<-paste(string, " a ", sep="")
       string<-paste(string, div[i+2], sep="")
-      string<-paste(string, ". No caso de clicar em 'cancel', n„o se criar· a vari·vel que permite verificar os DTCs por EBs.", sep="")
+      string<-paste(string, ". No caso de clicar em 'cancel', n√£o se criar√° a vari√°vel que permite verificar os DTCs por EBs.", sep="")
       ok<-gconfirm(string)
       if (ok)
       {
@@ -172,7 +172,7 @@ funcao_verificar_divisoes<-function(tabela,div)
   return(div)
 }
 
-#FunÁ„o que permite criar coluna que indica em que grupo, que foi posteriormente definido na funcao_divis„o, È que se encontra o n˙mero de EBs do DTC
+#Fun√ß√£o que permite criar coluna que indica em que grupo, que foi posteriormente definido na funcao_divis√£o, √© que se encontra o n√∫mero de EBs do DTC
 funcao_criar_coluna_num_EBs<-function(tabela, div)
 {
   tabela[["qtd_EBs_regi_divisoes"]]<-""
@@ -200,21 +200,21 @@ funcao_criar_coluna_num_EBs<-function(tabela, div)
   return(tabela)
 }
 
-#FunÁ„o que verifica se o teste a utilizar È paramÍtrico ou n„o-paramÍtrico.
+#Fun√ß√£o que verifica se o teste a utilizar √© param√™trico ou n√£o-param√™trico.
 funcao_parametrico<-function(tabela_uti,valor_testar,variaveis,valor_cb)
 {
   nao_parametrico<-FALSE
   i<-1
-  #Enquanto n„o se concluir que È n„o paramÍtrico, ou enquanto houver vari·veis a testar
+  #Enquanto n√£o se concluir que √© n√£o param√™trico, ou enquanto houver vari√°veis a testar
   while (!nao_parametrico & i<=length(variaveis))
   {
-    #ObtÈm uma tabela cuja coluna a testar sÛ contÈm a vari·vel representada no ciclo
+    #Obt√©m uma tabela cuja coluna a testar s√≥ cont√©m a vari√°vel representada no ciclo
     tabela_aux<-tabela_uti[tabela_uti[[valor_testar]]==variaveis[i],]
-    #ObtÈm as percentagens obtidas para essa vari·vel
+    #Obt√©m as percentagens obtidas para essa vari√°vel
     coluna_testar<-tabela_aux[[valor_cb]]/tabela_aux[["qtd_EBs_regi"]]*100
-    #ObtÈm o n˙mero de observaÁıes contendo essa vari·vel
+    #Obt√©m o n√∫mero de observa√ß√µes contendo essa vari√°vel
     num_obs<-length(coluna_testar)
-    #Se o n˙mero de observaÁıes for igual ou inferior a 5000, utilizar o teste de shapiro, caso contr·rio, usar o teste anderson-darling
+    #Se o n√∫mero de observa√ß√µes for igual ou inferior a 5000, utilizar o teste de shapiro, caso contr√°rio, usar o teste anderson-darling
     if (num_obs<=5000)
     {
       pvalor<-shapiro.test(coluna_testar)$p.value
@@ -223,14 +223,14 @@ funcao_parametrico<-function(tabela_uti,valor_testar,variaveis,valor_cb)
     {
       pvalor<-ad.test(coluna_testar)$p.value
     }
-    #Se o p-valor for <0.05, rejeita-se a hipÛtese nula, logo a distribuiÁ„o n„o È normal aos nÌveis de signific‚ncia usuais, e portanto deve-se utilizar o teste n„o-paramÈtrico
+    #Se o p-valor for <0.05, rejeita-se a hip√≥tese nula, logo a distribui√ß√£o n√£o √© normal aos n√≠veis de signific√¢ncia usuais, e portanto deve-se utilizar o teste n√£o-param√©trico
     if (pvalor<0.05)
     {
       nao_parametrico<-TRUE
     }
     else
     {
-      #Verificar existÍncia de outliers
+      #Verificar exist√™ncia de outliers
       ter_quartil<-quantile(coluna_testar)[4]
       pri_quartil<-quantile(coluna_testar)[2]
       AIQ<-ter_quartil-pri_quartil
@@ -249,13 +249,13 @@ funcao_parametrico<-function(tabela_uti,valor_testar,variaveis,valor_cb)
   return (nao_parametrico)
 }
 
-#FunÁ„o que cria o interface gr·fico
+#Fun√ß√£o que cria o interface gr√°fico
 interface<-function(tabela_original, analise_nome, simulador)
 {
-  #AlteraÁ„o de data para dia da semana
-  if (analise_nome!="An·lise OS") #Leituras
+  #Altera√ß√£o de data para dia da semana
+  if (analise_nome!="An√°lise OS") #Leituras
   {
-    #Passagem do mÍs de inglÍs para portuguÍs
+    #Passagem do m√™s de ingl√™s para portugu√™s
     tabela_original[["data_leit"]]<-gsub("FEB","FEV",tabela_original[["data_leit"]])
     tabela_original[["data_leit"]]<-gsub("APR","ABR",tabela_original[["data_leit"]])
     tabela_original[["data_leit"]]<-gsub("MAY","MAI",tabela_original[["data_leit"]])
@@ -265,7 +265,7 @@ interface<-function(tabela_original, analise_nome, simulador)
     tabela_original[["data_leit"]]<-gsub("DEC","DEZ",tabela_original[["data_leit"]])
     #Ex: antes do "as.date": 09FEV2019; depois do "as.date": 2019-02-21
     tabela_original[["data_leit"]]<-as.Date(tabela_original[["data_leit"]],"%d%b%Y")
-    #Nome da coluna que contÈm a data
+    #Nome da coluna que cont√©m a data
     nome_coluna<-"data_leit"
   }
   else #OS
@@ -280,53 +280,53 @@ interface<-function(tabela_original, analise_nome, simulador)
     {
       tabela_original[["data_OS"]]<-as.Date(tabela_original[["data_OS"]], "%d/%m/%Y")
     }
-    #Nome da coluna que contÈm a data
+    #Nome da coluna que cont√©m a data
     nome_coluna<-"data_OS"
   }
   
-  #ObtÈm a data mais antiga
+  #Obt√©m a data mais antiga
   dia_inicio<-min(as.character(tabela_original[[nome_coluna]]))
-  #ObtÈm a data mais recente
+  #Obt√©m a data mais recente
   dia_final<-max(as.character(tabela_original[[nome_coluna]]))
-  #Altera a coluna que contÈm a data para "dia_semana"
+  #Altera a coluna que cont√©m a data para "dia_semana"
   colnames(tabela_original)[colnames(tabela_original)==nome_coluna] <- "dia_semana"
-  #Altera as datas para o dia da semana correspondente ‡ data e a vari·vel "dia_semana" passa a ser do tipo fator
+  #Altera as datas para o dia da semana correspondente √† data e a vari√°vel "dia_semana" passa a ser do tipo fator
   tabela_original[["dia_semana"]]<-as.factor(weekdays(tabela_original[["dia_semana"]]))
   #Se a tabela introduzida foi obrida a partir do simulador
   if (simulador)
   {
-    #elimina as vari·veis ID existentes na tabela
+    #elimina as vari√°veis ID existentes na tabela
     tabela_original<-tabela_original[c(-(length(tabela_original)-1):-length(tabela_original))]
-    #Titulo do programa contÈm as datas em estudo e uma frase a indicar que se trata de resultados simulados
-    titulo<-paste(paste(paste(dia_inicio, " atÈ ", sep=""), dia_final, sep=""), " (valores simulados)", sep="")
+    #Titulo do programa cont√©m as datas em estudo e uma frase a indicar que se trata de resultados simulados
+    titulo<-paste(paste(paste(dia_inicio, " at√© ", sep=""), dia_final, sep=""), " (valores simulados)", sep="")
   }
   #No caso de a tabela introduzida ser da que foi obtida a partir da base de dados da empresa
   else
   {
-    #Titulo do programa contÈm apenas as datas da tabela
-    titulo<-paste(paste(dia_inicio, " atÈ ", sep=""), dia_final, sep="")
+    #Titulo do programa cont√©m apenas as datas da tabela
+    titulo<-paste(paste(dia_inicio, " at√© ", sep=""), dia_final, sep="")
   }
   
-  #As vari·veis ponteiro criadas podem ser acedidas e alteradas em qualquer funÁ„o do programa. Tem o mesmo funcionamento que uma vari·vel global
+  #As vari√°veis ponteiro criadas podem ser acedidas e alteradas em qualquer fun√ß√£o do programa. Tem o mesmo funcionamento que uma vari√°vel global
   divisoes<-novo_ponteiro(c())
   tabela_a_trabalhar<-novo_ponteiro(tabela_original)
   
-  #OpÁ„o que permite criar uma nova coluna na tabela que consiste na identificaÁ„o do intervalo que cada DTC pertence dependendo do n˙mero de EBs
-  fazer_div<-gconfirm("Deseja dividir os DTCs por grupos, consoante o n˙mero de EBs que possuem?")
-  #Se a opÁ„o for a de criaÁ„o da coluna
+  #Op√ß√£o que permite criar uma nova coluna na tabela que consiste na identifica√ß√£o do intervalo que cada DTC pertence dependendo do n√∫mero de EBs
+  fazer_div<-gconfirm("Deseja dividir os DTCs por grupos, consoante o n√∫mero de EBs que possuem?")
+  #Se a op√ß√£o for a de cria√ß√£o da coluna
   if (fazer_div)
   {
-    #CriaÁ„o de grupos de EBs
+    #Cria√ß√£o de grupos de EBs
     divisoes_aux<-funcao_divisao(min(tabela_a_trabalhar$value[["qtd_EBs_regi"]]),max(tabela_a_trabalhar$value[["qtd_EBs_regi"]]))
-    #Verifica se as divisıes foram criadas
+    #Verifica se as divis√µes foram criadas
     if (!all(divisoes_aux==c(-1)))
     {
       atualizar_ponteiro(divisoes,divisoes_aux)
     }
-    #Colocar coluna em tabela se as divisıes criadas forem v·lidas
+    #Colocar coluna em tabela se as divis√µes criadas forem v√°lidas
     if (length(divisoes$value)!=0)
     {
-      #Verifica se todos os intervalos contÍm pelo menos um elemento
+      #Verifica se todos os intervalos cont√™m pelo menos um elemento
       atualizar_ponteiro(divisoes,funcao_verificar_divisoes(tabela_a_trabalhar$value, divisoes$value))
       if (length(divisoes$value)!=0)
       {
@@ -335,15 +335,15 @@ interface<-function(tabela_original, analise_nome, simulador)
     }
   }
   
-  #Tabela que ser· utilizada caso se pretende reiniciar a tabela_a_trabalhar
+  #Tabela que ser√° utilizada caso se pretende reiniciar a tabela_a_trabalhar
   tabela_sem_alteracoes<-novo_ponteiro(tabela_a_trabalhar$value)
   
-  #Colunas que se poder„o alterar
-  if (analise_nome=="An·lise DTCs") #DTCs
+  #Colunas que se poder√£o alterar
+  if (analise_nome=="An√°lise DTCs") #DTCs
   {
     colunas_retirar<-which(names(tabela_a_trabalhar$value) %in% c("qtd_EBs_regi","fim_1dia","leitura_obtida","tempo_medio"))
   }
-  else if (analise_nome=="An·lise EBs") #EBs
+  else if (analise_nome=="An√°lise EBs") #EBs
   {
     colunas_retirar<-which(names(tabela_a_trabalhar$value) %in% c("qtd_EBs_regi","fim_1dia","leitura_obtida","tempo_leit_EB"))
   }
@@ -362,8 +362,8 @@ interface<-function(tabela_original, analise_nome, simulador)
   }
   
   
-  #Colunas que se poder„o testar
-  if (analise_nome=="An·lise EBs") #EBs
+  #Colunas que se poder√£o testar
+  if (analise_nome=="An√°lise EBs") #EBs
   {
     colunas_retirar<-which(colunas_alterar$value %in% c("config","marca_DTC","firmware"))
     if (!identical(colunas_retirar, integer(0)))
@@ -380,7 +380,7 @@ interface<-function(tabela_original, analise_nome, simulador)
     colunas_teste<-novo_ponteiro(colunas_alterar$value)
   }
   
-  #ObtÈm todas as opÁıes de cada uma das colunas que se poder„o alterar 
+  #Obt√©m todas as op√ß√µes de cada uma das colunas que se poder√£o alterar 
   aux_lista_opcoes<-list()
   for (i in 1:length(colunas_alterar$value))
   {
@@ -388,7 +388,7 @@ interface<-function(tabela_original, analise_nome, simulador)
   }
   lista_opcoes<-novo_ponteiro(aux_lista_opcoes)
   
-  #Cria-se uma lista que ter· todas as opÁıes de cada uma das colunas que se poder„o obter gr·ficos separadamente
+  #Cria-se uma lista que ter√° todas as op√ß√µes de cada uma das colunas que se poder√£o obter gr√°ficos separadamente
   aux_lista_opcoes_qq<-list()
   for (i in 1:length(colunas_teste$value))
   {
@@ -398,30 +398,30 @@ interface<-function(tabela_original, analise_nome, simulador)
   
   ######################################################## Layout ############################################################
   
-  window <- gwindow(titulo) #Janela com o tÌtulo
+  window <- gwindow(titulo) #Janela com o t√≠tulo
   gstatusbar("Autor: Bernardo Amaral", cont=window) #Autor
   getToolkitWidget(window)$maximize() #Maximiza a janela
   BigGroup <- ggroup(cont=window)
   group <- ggroup(horizontal=FALSE, container=BigGroup)
   
-  #Adiciona um gr·fico na janela
+  #Adiciona um gr√°fico na janela
   valor_janela<-novo_ponteiro(ggraphics())
   add(BigGroup,valor_janela$value)
   
-  ######################################################## Sum·rio ###########################################################
+  ######################################################## Sum√°rio ###########################################################
   
-  #Cria frame para a opÁ„o "Sumario"
+  #Cria frame para a op√ß√£o "Sumario"
   tmpSum <- gframe("Sumario", container=group)
   
-  #FunÁ„o que cria um sum·rio da tabela utilizada apÛs clicar no bot„o "Sumario da tabela atual"
+  #Fun√ß√£o que cria um sum√°rio da tabela utilizada ap√≥s clicar no bot√£o "Sumario da tabela atual"
   mostrarSumario<-function(h,...)
   {
     #Nomes de cada uma das colunas da tabela
     nomes_colunas<-gsub(" ", "", colnames(summary(tabela_a_trabalhar$value)), fixed = TRUE)
-    #N˙mero de colunas na tabela
+    #N√∫mero de colunas na tabela
     num_colunas<-length(tabela_a_trabalhar$value)
     data_usar<-c()
-    #Verifica qual È o m·ximo n˙mero de linhas que s„o utilizadas de todas as colunas
+    #Verifica qual √© o m√°ximo n√∫mero de linhas que s√£o utilizadas de todas as colunas
     max_valor<-0
     for (i in 1:num_colunas)
     {
@@ -430,18 +430,18 @@ interface<-function(tabela_original, analise_nome, simulador)
         max_valor<-length(summary(tabela_a_trabalhar$value[,i]))
       }
     }
-    #Adiciona-se o sum·rio de cada coluna ‡ vari·vel "data_usar" (da ˙ltima coluna para a primeira)
+    #Adiciona-se o sum√°rio de cada coluna √† vari√°vel "data_usar" (da √∫ltima coluna para a primeira)
     for (i in num_colunas:1)
     {
-      #Nota: Aquando criado o sum·rio da coluna a adicionar, o nome de cada vari·vel existente nessa coluna È considerado como sendo o nome da linha
+      #Nota: Aquando criado o sum√°rio da coluna a adicionar, o nome de cada vari√°vel existente nessa coluna √© considerado como sendo o nome da linha
       aux<-summary(tabela_a_trabalhar$value[,i])
-      valor<-length(aux) #Guarda o valor do n˙mero de linhas que se obteve depois do sum·rio da coluna
+      valor<-length(aux) #Guarda o valor do n√∫mero de linhas que se obteve depois do sum√°rio da coluna
       length(aux)<-max_valor
       data_usar<-cbind(aux,data_usar)
       #Para cada linha da coluna adicionada
       for (j in 1:valor)
       {
-        #Para contornar o problema das vari·veis dito anteriormente, junta-se o valor da vari·vel ‡ coluna, juntamente com o seu valor, e apagam-se os nomes das linhas
+        #Para contornar o problema das vari√°veis dito anteriormente, junta-se o valor da vari√°vel √† coluna, juntamente com o seu valor, e apagam-se os nomes das linhas
         if (is.na(as.double(data_usar[j,1]))) #Caso factor/string
         {
           data_usar[j,1]<-paste(paste(row.names(data_usar)[j],": ",sep=""),data_usar[j,1],sep="")
@@ -459,7 +459,7 @@ interface<-function(tabela_original, analise_nome, simulador)
     {
       for (j in 1:length(data_usar[,i]))
       {
-        #Verifica em todas as posiÁıes da tabela criada, se h· valores NA. Se existirem, considera-se o valor "" para esses valores
+        #Verifica em todas as posi√ß√µes da tabela criada, se h√° valores NA. Se existirem, considera-se o valor "" para esses valores
         if (is.na(data_usar[j,i]))
         {
           data_usar[j,i]<-""
@@ -473,25 +473,25 @@ interface<-function(tabela_original, analise_nome, simulador)
     add(BigGroup,valor_janela$value)
   }
   
-  #CriaÁ„o do bot„o "Sumario da Tabela Atual"
+  #Cria√ß√£o do bot√£o "Sumario da Tabela Atual"
   botao_sumario <- gbutton("Sumario da Tabela Atual","sumario",handler = mostrarSumario)
   add(tmpSum,botao_sumario)
   
   ##################################################### Alterar Tabela #######################################################
   
-  #Cria frame para a opÁ„o "Alterar Tabela"
+  #Cria frame para a op√ß√£o "Alterar Tabela"
   tmpAlt <- gframe("Alterar Tabela", container=group, horizontal=FALSE)
   
-  #FunÁ„o que altera o combobox das opÁıes da coluna consoante a coluna selecionada
+  #Fun√ß√£o que altera o combobox das op√ß√µes da coluna consoante a coluna selecionada
   alterar_coluna_opcao<-function(h,...)
   {
-    #Apaga o Combobox das opÁıes e o botao existentes no frame
+    #Apaga o Combobox das op√ß√µes e o botao existentes no frame
     delete(tmpAlt,botao_alterar)
     delete(tmpAlt,alterar_opcao$value)
-    #Aquando selecionada a coluna, as opÁıes do combobox das opÁıes s„o alteradas
+    #Aquando selecionada a coluna, as op√ß√µes do combobox das op√ß√µes s√£o alteradas
     pos<-match(svalue(h$obj),colunas_alterar$value)
     atualizar_ponteiro(alterar_opcao,gcombobox(lista_opcoes$value[[colunas_alterar$value[pos]]]))
-    #Adiciona o combobox alterado e o bot„o ao frame
+    #Adiciona o combobox alterado e o bot√£o ao frame
     add(tmpAlt,alterar_opcao$value)
     add(tmpAlt,botao_alterar)
   }
@@ -500,68 +500,68 @@ interface<-function(tabela_original, analise_nome, simulador)
   alterar_coluna <- novo_ponteiro(gcombobox(colunas_alterar$value, handler=alterar_coluna_opcao))
   add(tmpAlt,alterar_coluna$value)
   
-  #Combobox das opÁıes dentro da coluna selecionada do combobox anterior 
+  #Combobox das op√ß√µes dentro da coluna selecionada do combobox anterior 
   alterar_opcao <- novo_ponteiro(gcombobox(lista_opcoes$value[[colunas_alterar$value[1]]]))
   add(tmpAlt,alterar_opcao$value)
   
-  #FunÁ„o que altera a tabela a trabalhar aquando carregado o bot„o "Alterar" consoante as opÁıes escolhidas nos comboboxs
-  #A opÁ„o escolhida È considerada, todas as outras opÁıes da coluna selecionada s„o desconsideradas
+  #Fun√ß√£o que altera a tabela a trabalhar aquando carregado o bot√£o "Alterar" consoante as op√ß√µes escolhidas nos comboboxs
+  #A op√ß√£o escolhida √© considerada, todas as outras op√ß√µes da coluna selecionada s√£o desconsideradas
   alterar_tabela<-function(h,...)
   {
-    #Valor do combobox correspondente ‡ coluna
+    #Valor do combobox correspondente √† coluna
     coluna_utilizada<-svalue(alterar_coluna$value)
-    #Valor da tabela sem alteraÁıes
+    #Valor da tabela sem altera√ß√µes
     tabela_auxiliar<-tabela_sem_alteracoes$value
-    #Valor da opÁ„o escolhida
+    #Valor da op√ß√£o escolhida
     alterar_valor<-svalue(alterar_opcao$value)
-    #Encontra na tabela sem alteraÁıes a posiÁ„o da coluna a alterar
+    #Encontra na tabela sem altera√ß√µes a posi√ß√£o da coluna a alterar
     alterar<-which(coluna_utilizada==colnames(tabela_sem_alteracoes$value))
     for (i in 1:length(tabela_sem_alteracoes$value))
     {
-      #Se n„o for a coluna a alterar
+      #Se n√£o for a coluna a alterar
       if (i!=alterar)
       {
-        #Verifica se a coluna È do tipo "factor"
+        #Verifica se a coluna √© do tipo "factor"
         if (sapply(tabela_sem_alteracoes$value, class)[i]=="factor")
         {
-          #Se for do tipo factor, verifica na tabela a trabalhar, a coluna sÛ tinha o valor de uma opÁ„o 
+          #Se for do tipo factor, verifica na tabela a trabalhar, a coluna s√≥ tinha o valor de uma op√ß√£o 
           if (length(unique(tabela_a_trabalhar$value[,i]))==1)
           {
-            #Se sim, È obtido o valor dessa opÁ„o para que a tabela mantenha essa opÁ„o alterada
+            #Se sim, √© obtido o valor dessa op√ß√£o para que a tabela mantenha essa op√ß√£o alterada
             var_nome<-unique(tabela_a_trabalhar$value[,i])
             tabela_auxiliar<-tabela_auxiliar[tabela_auxiliar[,i]==var_nome,]
           }
         }
       }
     }
-    #A alteraÁ„o escolhida È realizada.
-    if (alterar_valor!="Todos") #Utilizador escolheu uma opÁ„o especifica
+    #A altera√ß√£o escolhida √© realizada.
+    if (alterar_valor!="Todos") #Utilizador escolheu uma op√ß√£o especifica
     {
       tabela_auxiliar<-tabela_auxiliar[tabela_auxiliar[,alterar]==alterar_valor,]
     }
-    #Verifica se com a alteraÁ„o feita, a tabela È nula. Se sim, a operaÁ„o n„o È realizada
+    #Verifica se com a altera√ß√£o feita, a tabela √© nula. Se sim, a opera√ß√£o n√£o √© realizada
     if (!empty(tabela_auxiliar))
     {
-      #Apaga-se os botıes e comboboxes relativos aos testes
+      #Apaga-se os bot√µes e comboboxes relativos aos testes
       if (length(colunas_teste$value)!=0)
       {
         delete(tmpTestTempPercT,botao_teste)
-        if (analise_nome=="An·lise DTCs" | analise_nome=="An·lise EBs")
+        if (analise_nome=="An√°lise DTCs" | analise_nome=="An√°lise EBs")
         {
-          if (analise_nome=="An·lise EBs")
+          if (analise_nome=="An√°lise EBs")
           {
             delete(tmpTestTempPercT,botao_tempo)
           }
           delete(tmpTestTempPercT,perc_func)
         }
-        if (analise_nome=="An·lise DTCs")
+        if (analise_nome=="An√°lise DTCs")
         {
           delete(tmpTestGraObriOpc,botao_qq)
           delete(tmpTestGraOpc,botao_big)
         }
         delete(tmpTestGraOpc,botao_plot)
         delete(tmpTestOpcGra,cb_opcao_graficos)
-        if (analise_nome=="An·lise EBs" | analise_nome=="An·lise DTCs")
+        if (analise_nome=="An√°lise EBs" | analise_nome=="An√°lise DTCs")
         {
           delete(tmpTestOpcGra,cb_dias_teste)
         }
@@ -569,9 +569,9 @@ interface<-function(tabela_original, analise_nome, simulador)
         delete(tmpTestVar, teste_coluna$value)
       }
       
-      #Atualiza-se a tabela consoante as alteraÁıes feitas
+      #Atualiza-se a tabela consoante as altera√ß√µes feitas
       atualizar_ponteiro(tabela_a_trabalhar,tabela_auxiliar)
-      if (analise_nome=="An·lise EBs")
+      if (analise_nome=="An√°lise EBs")
       {
         colunas_retirar<-which(colunas_alterar$value %in% c("config","marca_DTC","firmware"))
         if (!identical(colunas_retirar, integer(0)))
@@ -588,7 +588,7 @@ interface<-function(tabela_original, analise_nome, simulador)
         aux_colunas_teste<-colunas_alterar$value
       }
       i<-1
-      #Retira nas colunas alterar as colunas que sÛ possuem uma opÁ„o
+      #Retira nas colunas alterar as colunas que s√≥ possuem uma op√ß√£o
       while (i<=length(aux_colunas_teste))
       {
         if (length(unique(tabela_a_trabalhar$value[[aux_colunas_teste[i]]]))==1)
@@ -604,7 +604,7 @@ interface<-function(tabela_original, analise_nome, simulador)
       atualizar_ponteiro(colunas_teste,aux_colunas_teste)
       atualizar_ponteiro(teste_coluna,gcombobox(colunas_teste$value, handler=teste_coluna_opcao))
       
-      #Atualiza-se a lista que ter· todas as opÁıes de cada uma das colunas para se criar gr·ficos isoladamente
+      #Atualiza-se a lista que ter√° todas as op√ß√µes de cada uma das colunas para se criar gr√°ficos isoladamente
       aux_lista_opcoes_qq<-list()
       i<-1
       while(i<=length(colunas_teste$value))
@@ -615,120 +615,120 @@ interface<-function(tabela_original, analise_nome, simulador)
       atualizar_ponteiro(lista_opcoes_qq,aux_lista_opcoes_qq)
       atualizar_ponteiro(teste_opcao, gcombobox(lista_opcoes_qq$value[[teste_coluna$value[1]]]))
       
-      #Se houver colunas para teste, s„o repostas no frame "testes" os botıes e comboboxes necess·rios
+      #Se houver colunas para teste, s√£o repostas no frame "testes" os bot√µes e comboboxes necess√°rios
       if (length(colunas_teste$value)!=0)
       {
         add(tmpTestVar,teste_coluna$value)
         add(tmpTestVar,teste_opcao$value)
-        if (analise_nome=="An·lise EBs" | analise_nome=="An·lise DTCs")
+        if (analise_nome=="An√°lise EBs" | analise_nome=="An√°lise DTCs")
         {
           add(tmpTestOpcGra,cb_dias_teste)
         }
         add(tmpTestOpcGra,cb_opcao_graficos)
         add(tmpTestGraOpc,botao_plot)
-        if (analise_nome=="An·lise DTCs")
+        if (analise_nome=="An√°lise DTCs")
         {
           add(tmpTestGraOpc,botao_big)
           add(tmpTestGraObriOpc,botao_qq)
         }
-        if (analise_nome=="An·lise DTCs" | analise_nome=="An·lise EBs")
+        if (analise_nome=="An√°lise DTCs" | analise_nome=="An√°lise EBs")
         {
           add(tmpTestTempPercT,perc_func)
-          if (analise_nome=="An·lise EBs")
+          if (analise_nome=="An√°lise EBs")
           {
             add(tmpTestTempPercT,botao_tempo)
           }
         }
         add(tmpTestTempPercT,botao_teste)
       }
-      gmessage("AlteraÁ„o feita com sucesso.")
+      gmessage("Altera√ß√£o feita com sucesso.")
     }
     else
     {
-      gmessage("AlteraÁ„o n„o realizada, pois a tabela fica vazia!")
+      gmessage("Altera√ß√£o n√£o realizada, pois a tabela fica vazia!")
     }
   }
   
-  #CriaÁ„o do bot„o "Alterar"
+  #Cria√ß√£o do bot√£o "Alterar"
   botao_alterar <- gbutton("Alterar", "alterar",handler=alterar_tabela)
   add(tmpAlt,botao_alterar)
   
   ######################################################## Histograma ########################################################
   
-  #Cria frame para a opÁ„o "Histograma da tabela atual"
+  #Cria frame para a op√ß√£o "Histograma da tabela atual"
   tmpHis<-gframe("Histograma da tabela atual", container=group, horizontal = FALSE)
   
-  #Se o ficheiro for das leituras, cria um combobox com duas opÁıes: receÁ„o de leituras ao primeiro dia/receÁ„o de leituras
-  if (analise_nome=="An·lise DTCs" | analise_nome=="An·lise EBs")
+  #Se o ficheiro for das leituras, cria um combobox com duas op√ß√µes: rece√ß√£o de leituras ao primeiro dia/rece√ß√£o de leituras
+  if (analise_nome=="An√°lise DTCs" | analise_nome=="An√°lise EBs")
   {
-    cb_dias <- gcombobox(c("Leituras Recebidas","Leituras 1∫ dia"))
+    cb_dias <- gcombobox(c("Leituras Recebidas","Leituras 1¬∫ dia"))
     add(tmpHis,cb_dias)
   }
   
-  #FunÁ„o que cria um histograma da tabela atual (Se a tabela for de leituras, ent„o cria o histograma consoante a escolha no combobox anterior)
+  #Fun√ß√£o que cria um histograma da tabela atual (Se a tabela for de leituras, ent√£o cria o histograma consoante a escolha no combobox anterior)
   plot_geral<-function(h,...)
   {
-    #Atualiza-se o valor da janela e coloca-se um gr·fico na janela (que posteriormente ser· um histograma)
+    #Atualiza-se o valor da janela e coloca-se um gr√°fico na janela (que posteriormente ser√° um histograma)
     delete(BigGroup,valor_janela$value)
     atualizar_ponteiro(valor_janela,ggraphics())
     add(BigGroup,valor_janela$value)
-    if (analise_nome=="An·lise DTCs")
+    if (analise_nome=="An√°lise DTCs")
     {
       #Histograma da percentagem de EBs recebidas nos DTCs
       if (svalue(cb_dias)=="Leituras Recebidas")
       {
         depend<-tabela_a_trabalhar$value[["leitura_obtida"]]/tabela_a_trabalhar$value[["qtd_EBs_regi"]]*100
-        hist(depend,breaks=20, main="Percentagem De Leituras DTCs", xlab = "Percentagem", ylab="N˙mero de DTCs")
+        hist(depend,breaks=20, main="Percentagem De Leituras DTCs", xlab = "Percentagem", ylab="N√∫mero de DTCs")
       }
       #Histograma da percentagem de EBs recebidas nos DTCs ao fim de um dia
       else
       {
         depend<-tabela_a_trabalhar$value[["fim_1dia"]]/tabela_a_trabalhar$value[["qtd_EBs_regi"]]*100
-        hist(depend,breaks=20, main="Percentagem De Leituras DTCs 1∫ dia", xlab = "Percentagem", ylab="N˙mero de DTCs")
+        hist(depend,breaks=20, main="Percentagem De Leituras DTCs 1¬∫ dia", xlab = "Percentagem", ylab="N√∫mero de DTCs")
       }
     }
-    else if (analise_nome=="An·lise EBs")
+    else if (analise_nome=="An√°lise EBs")
     {
       #Histograma que representa o sucesso (valor=1) ou insucesso (valor=0) das EBs estudadas
       if (svalue(cb_dias)=="Leituras Recebidas")
       {
         depend<-tabela_a_trabalhar$value[["leitura_obtida"]]
-        hist(depend,breaks=20, main="Leituras EBs", xlab = "Leitura Realizada", ylab="N˙mero de EBs")
+        hist(depend,breaks=20, main="Leituras EBs", xlab = "Leitura Realizada", ylab="N√∫mero de EBs")
       }
       #Histograma que representa o sucesso (valor=1) ou insucesso (valor=0) ao fim de um dia das EBs estudadas
       else
       {
         depend<-tabela_a_trabalhar$value[["fim_1dia"]]
-        hist(depend,breaks=20, main="Leituras EBs 1∫ Dia", xlab = "Leitura Realizada", ylab="N˙mero de EBs")
+        hist(depend,breaks=20, main="Leituras EBs 1¬∫ Dia", xlab = "Leitura Realizada", ylab="N√∫mero de EBs")
       }
     }
     #Histograma que representa o sucesso (valor=1) ou insucesso (valor=0) das OSs estudadas
     else
     {
       depend<-tabela_a_trabalhar$value[["sucesso"]]
-      hist(depend,breaks=20, main="OS Realizadas", xlab = "OS realizada", ylab="N˙mero de OS")
+      hist(depend,breaks=20, main="OS Realizadas", xlab = "OS realizada", ylab="N√∫mero de OS")
     }
   }
   
-  #CriaÁ„o do bot„o "Histograma"
+  #Cria√ß√£o do bot√£o "Histograma"
   botao_hist <- gbutton("Histograma", "hist_tot", handler=plot_geral)
   add(tmpHis,botao_hist)
   
-  ################################################### Testes e Gr·ficos ######################################################
+  ################################################### Testes e Gr√°ficos ######################################################
   
-  #Cria frame para a opÁ„o "Teste"
-  tmpTest <- gframe("Realizar testes e desenhar gr·ficos", container=group, horizontal = FALSE)
+  #Cria frame para a op√ß√£o "Teste"
+  tmpTest <- gframe("Realizar testes e desenhar gr√°ficos", container=group, horizontal = FALSE)
   
-  #Cria frame dentro do frame "Teste" para as vari·veis
-  tmpTestVar <- gframe("Vari·veis e OpÁıes", container=tmpTest, horizontal = FALSE)
+  #Cria frame dentro do frame "Teste" para as vari√°veis
+  tmpTestVar <- gframe("Vari√°veis e Op√ß√µes", container=tmpTest, horizontal = FALSE)
   
-  #FunÁ„o que altera o combobox das opÁıes da coluna consoante a coluna selecionada
+  #Fun√ß√£o que altera o combobox das op√ß√µes da coluna consoante a coluna selecionada
   teste_coluna_opcao<-function(h,...)
   {
-    #Apaga o Combobox das opÁıes existentes no frame
+    #Apaga o Combobox das op√ß√µes existentes no frame
     delete(tmpTestVar,teste_opcao$value)
     
-    #Aquando selecionada a coluna, as opÁıes do combobox das opÁıes s„o alteradas e atualizadas
+    #Aquando selecionada a coluna, as op√ß√µes do combobox das op√ß√µes s√£o alteradas e atualizadas
     pos<-match(svalue(h$obj),colunas_teste$value)
     lista_aux<-lista_opcoes_qq$value[[colunas_teste$value[pos]]]
     i<-1
@@ -748,42 +748,42 @@ interface<-function(tabela_original, analise_nome, simulador)
     add(tmpTestVar,teste_opcao$value)
   }
   
-  #Cria um combobox com as colunas disponÌveis para teste
+  #Cria um combobox com as colunas dispon√≠veis para teste
   teste_coluna <- novo_ponteiro(gcombobox(colunas_teste$value, handler=teste_coluna_opcao))
   add(tmpTestVar,teste_coluna$value)
   
-  #Combobox das opÁıes dentro da coluna selecionada do combobox na frame teste
+  #Combobox das op√ß√µes dentro da coluna selecionada do combobox na frame teste
   teste_opcao <- novo_ponteiro(gcombobox(lista_opcoes_qq$value[[teste_coluna$value[1]]]))
   add(tmpTestVar,teste_opcao$value)
   
-  #Cria frame dentro do frame "Teste" com as opÁıes para os gr·ficos que necessitam de escolhas do utilizador
-  tmpTestOpcGra <- gframe("Gr·ficos Escolhas", container=tmpTest, horizontal = FALSE)
+  #Cria frame dentro do frame "Teste" com as op√ß√µes para os gr√°ficos que necessitam de escolhas do utilizador
+  tmpTestOpcGra <- gframe("Gr√°ficos Escolhas", container=tmpTest, horizontal = FALSE)
   
-  #Se o ficheiro for das leituras, cria um combobox com duas opÁıes: receÁ„o de leituras ao primeiro dia/receÁ„o de leituras
-  if (analise_nome=="An·lise EBs" | analise_nome=="An·lise DTCs")
+  #Se o ficheiro for das leituras, cria um combobox com duas op√ß√µes: rece√ß√£o de leituras ao primeiro dia/rece√ß√£o de leituras
+  if (analise_nome=="An√°lise EBs" | analise_nome=="An√°lise DTCs")
   {
-    cb_dias_teste<-gcombobox(c("Leituras Recebidas","Leituras 1∫ dia"))
+    cb_dias_teste<-gcombobox(c("Leituras Recebidas","Leituras 1¬∫ dia"))
     add(tmpTestOpcGra,cb_dias_teste)
   }
   
-  #Combobox com opÁıes para mostrar nos gr·ficos todas as opÁıes, ou apenas a opÁ„o selecionada
-  cb_opcao_graficos <- gcombobox(c("Todas OpÁıes","Apenas OpÁ„o Selecionada"))
+  #Combobox com op√ß√µes para mostrar nos gr√°ficos todas as op√ß√µes, ou apenas a op√ß√£o selecionada
+  cb_opcao_graficos <- gcombobox(c("Todas Op√ß√µes","Apenas Op√ß√£o Selecionada"))
   add(tmpTestOpcGra,cb_opcao_graficos)
   
-  #Cria frame dentro do frame "Teste" para os gr·ficos que necessitam da opÁ„o para se desenhar
-  tmpTestGraOpc <- gframe("Gr·ficos (com escolha)", container=tmpTest, horizontal = FALSE)
+  #Cria frame dentro do frame "Teste" para os gr√°ficos que necessitam da op√ß√£o para se desenhar
+  tmpTestGraOpc <- gframe("Gr√°ficos (com escolha)", container=tmpTest, horizontal = FALSE)
   
-  #FunÁ„o que permite criar o histograma do sucesso/insucesso (OS/EBs) ou percentagens (DTC) para cada vari·vel na coluna associada
+  #Fun√ß√£o que permite criar o histograma do sucesso/insucesso (OS/EBs) ou percentagens (DTC) para cada vari√°vel na coluna associada
   realizar_plot<-function(h,...)
   {
-    #Atualiza-se o valor da janela e coloca-se um gr·fico na janela
+    #Atualiza-se o valor da janela e coloca-se um gr√°fico na janela
     delete(BigGroup,valor_janela$value)
     atualizar_ponteiro(valor_janela,ggraphics())
     add(BigGroup,valor_janela$value)
-    #ObtÈm-se o valor da coluna escolhida
+    #Obt√©m-se o valor da coluna escolhida
     coluna_escolhida<-svalue(teste_coluna$value)
-    #Verifica se È utilizada a tabela toda, ou apenas a opÁ„o selecionada
-    if (svalue(cb_opcao_graficos)=="Apenas OpÁ„o Selecionada")
+    #Verifica se √© utilizada a tabela toda, ou apenas a op√ß√£o selecionada
+    if (svalue(cb_opcao_graficos)=="Apenas Op√ß√£o Selecionada")
     {
       coluna_opcao_escolhida<-svalue(teste_opcao$value)
       tabela_aux<-droplevels(tabela_a_trabalhar$value[tabela_a_trabalhar$value[[coluna_escolhida]]==coluna_opcao_escolhida,])
@@ -792,11 +792,11 @@ interface<-function(tabela_original, analise_nome, simulador)
     {
       tabela_aux<-tabela_a_trabalhar$value
     }
-    #Se for an·lise das leituras, o programa verifica qual a opÁ„o escolhida no combobox existente no frame "teste" antes de criar os histogramas 
-    if (analise_nome=="An·lise DTCs" | analise_nome=="An·lise EBs")
+    #Se for an√°lise das leituras, o programa verifica qual a op√ß√£o escolhida no combobox existente no frame "teste" antes de criar os histogramas 
+    if (analise_nome=="An√°lise DTCs" | analise_nome=="An√°lise EBs")
     {
       leituras_todas<-svalue(cb_dias_teste)
-      if (leituras_todas=="Leituras 1∫ dia")
+      if (leituras_todas=="Leituras 1¬∫ dia")
       {
         nome_depend<-"fim_1dia"
       }
@@ -804,48 +804,48 @@ interface<-function(tabela_original, analise_nome, simulador)
       {
         nome_depend<-"leitura_obtida"
       }
-      #coluna correspondente ao n˙mero de leituras que foram enviadas da tabela utilizada
+      #coluna correspondente ao n√∫mero de leituras que foram enviadas da tabela utilizada
       depend<-tabela_aux[[nome_depend]]
       #Se for DTCs, calcula-se a percentagem e cria-se o histograma
-      if (analise_nome=="An·lise DTCs")
+      if (analise_nome=="An√°lise DTCs")
       {
         depend<-depend/tabela_aux[["qtd_EBs_regi"]]*100
-        hist(depend ~ tabela_aux[[coluna_escolhida]],breaks=20,xlab = paste(paste("Percentagem de Leituras (",leituras_todas, sep=""), ")", sep=""),ylab="N˙mero de DTCs")
+        hist(depend ~ tabela_aux[[coluna_escolhida]],breaks=20,xlab = paste(paste("Percentagem de Leituras (",leituras_todas, sep=""), ")", sep=""),ylab="N√∫mero de DTCs")
       }
       #Se for EBs, cria-se o histograma
       else
       {
-        hist(depend ~ tabela_aux[[coluna_escolhida]],breaks=20,xlab = paste(paste("Leitura realizada (",leituras_todas, sep=""), ")", sep=""),ylab="N˙mero de EBs")
+        hist(depend ~ tabela_aux[[coluna_escolhida]],breaks=20,xlab = paste(paste("Leitura realizada (",leituras_todas, sep=""), ")", sep=""),ylab="N√∫mero de EBs")
       }
     }
-    #Se for OS, obtÈm-se o sucesso/insucesso das OSs realizadas e cria-se o histograma
+    #Se for OS, obt√©m-se o sucesso/insucesso das OSs realizadas e cria-se o histograma
     else
     {
       depend<-tabela_aux[["sucesso"]]
-      hist(depend ~ tabela_aux[[coluna_escolhida]],breaks=20,xlab = "OS realizada",ylab="N˙mero de OS")
+      hist(depend ~ tabela_aux[[coluna_escolhida]],breaks=20,xlab = "OS realizada",ylab="N√∫mero de OS")
     }
   }
   
-  #CriaÁ„o do bot„o "Histograma"
+  #Cria√ß√£o do bot√£o "Histograma"
   botao_plot <- gbutton("Histograma", "hist", handler=realizar_plot)
   add(tmpTestGraOpc,botao_plot)
   
-  #Se o ficheiro for a an·lise de leituras nos DTCs
-  if (analise_nome=="An·lise DTCs")
+  #Se o ficheiro for a an√°lise de leituras nos DTCs
+  if (analise_nome=="An√°lise DTCs")
   {
-    #FunÁ„o que cria uma caixa de bigodes para cada vari·vel na coluna associada
+    #Fun√ß√£o que cria uma caixa de bigodes para cada vari√°vel na coluna associada
     realizar_big<-function(h,...)
     {
-      #Atualiza-se o valor da janela e coloca-se um gr·fico na janela
+      #Atualiza-se o valor da janela e coloca-se um gr√°fico na janela
       delete(BigGroup,valor_janela$value)
       atualizar_ponteiro(valor_janela,ggraphics())
       add(BigGroup,valor_janela$value)
-      #ObtÈm-se o valor da coluna escolhida
+      #Obt√©m-se o valor da coluna escolhida
       coluna_escolhida<-svalue(teste_coluna$value)
       titulo<-coluna_escolhida
       titulo_x<-""
-      #Verifica se È utilizada a tabela toda, ou apenas a opÁ„o selecionada
-      if (svalue(cb_opcao_graficos)=="Apenas OpÁ„o Selecionada")
+      #Verifica se √© utilizada a tabela toda, ou apenas a op√ß√£o selecionada
+      if (svalue(cb_opcao_graficos)=="Apenas Op√ß√£o Selecionada")
       {
         coluna_opcao_escolhida<-svalue(teste_opcao$value)
         tabela_aux<-droplevels(tabela_a_trabalhar$value[tabela_a_trabalhar$value[[coluna_escolhida]]==coluna_opcao_escolhida,])
@@ -855,9 +855,9 @@ interface<-function(tabela_original, analise_nome, simulador)
       {
         tabela_aux<-tabela_a_trabalhar$value
       }
-      #Verifica qual a opÁ„o escolhida no combobox existente no frame "teste" antes de criar as caixas de bigodes 
+      #Verifica qual a op√ß√£o escolhida no combobox existente no frame "teste" antes de criar as caixas de bigodes 
       leituras_todas<-svalue(cb_dias_teste)
-      if (leituras_todas=="Leituras 1∫ dia")
+      if (leituras_todas=="Leituras 1¬∫ dia")
       {
         nome_depend<-"fim_1dia"
       }
@@ -870,30 +870,30 @@ interface<-function(tabela_original, analise_nome, simulador)
       plot(depend ~ tabela_aux[[coluna_escolhida]], xlab=titulo_x, ylab=paste(paste("Percentagem de Leituras (",leituras_todas, sep=""), ")", sep=""), main=titulo)
     }
     
-    #CriaÁ„o do bot„o "Caixa de Bigodes"
+    #Cria√ß√£o do bot√£o "Caixa de Bigodes"
     botao_big <- gbutton("Caixa de Bigodes", "cb", handler=realizar_big)
     add(tmpTestGraOpc,botao_big)
     
-    #Cria frame dentro do frame "Teste" para os gr·ficos que sÛ funcionam com a opÁ„o escolhida
-    tmpTestGraObriOpc <- gframe("Gr·ficos (opÁ„o escolhida)", container=tmpTest, horizontal = FALSE)
+    #Cria frame dentro do frame "Teste" para os gr√°ficos que s√≥ funcionam com a op√ß√£o escolhida
+    tmpTestGraObriOpc <- gframe("Gr√°ficos (op√ß√£o escolhida)", container=tmpTest, horizontal = FALSE)
     
-    #FunÁ„o que cria o QQPlot da vari·vel escolhida do combobox acima
+    #Fun√ß√£o que cria o QQPlot da vari√°vel escolhida do combobox acima
     criar_qqplot<-function(h,...)
     {
-      #Atualiza-se o valor da janela e coloca-se um gr·fico na janela
+      #Atualiza-se o valor da janela e coloca-se um gr√°fico na janela
       delete(BigGroup,valor_janela$value)
       atualizar_ponteiro(valor_janela,ggraphics())
       add(BigGroup,valor_janela$value)
       
-      #ObtÈm-se o valor da coluna escolhida
+      #Obt√©m-se o valor da coluna escolhida
       coluna_escolhida<-svalue(teste_coluna$value)
       coluna_opcao_escolhida<-svalue(teste_opcao$value)
       titulo<-paste(paste(paste(coluna_escolhida, " (", sep=""), coluna_opcao_escolhida, sep=""), ")", sep="")
       tabela_aux<-droplevels(tabela_a_trabalhar$value[tabela_a_trabalhar$value[[coluna_escolhida]]==coluna_opcao_escolhida,])
       
-      #Verifica qual a opÁ„o escolhida no combobox existente no frame "teste" antes de criar as caixas de bigodes 
+      #Verifica qual a op√ß√£o escolhida no combobox existente no frame "teste" antes de criar as caixas de bigodes 
       leituras_todas<-svalue(cb_dias_teste)
-      if (leituras_todas=="Leituras 1∫ dia")
+      if (leituras_todas=="Leituras 1¬∫ dia")
       {
         nome_depend<-"fim_1dia"
       }
@@ -907,7 +907,7 @@ interface<-function(tabela_original, analise_nome, simulador)
       qqline(depend, col = "steelblue")
     }
     
-    #CriaÁ„o do bot„o "QQPlot"
+    #Cria√ß√£o do bot√£o "QQPlot"
     botao_qq <- gbutton("QQPlot", "QQ", handler=criar_qqplot)
     add(tmpTestGraObriOpc,botao_qq)
   }
@@ -915,9 +915,9 @@ interface<-function(tabela_original, analise_nome, simulador)
   #Cria frame dentro do frame "Teste" para o teste e as percentagens de leituras (DTCs) e tempos (EBs)
   tmpTestTempPercT <- gframe("Testes para analisar", container = tmpTest, horizontal = FALSE)
   
-  if (analise_nome=="An·lise DTCs" | analise_nome=="An·lise EBs")
+  if (analise_nome=="An√°lise DTCs" | analise_nome=="An√°lise EBs")
   {
-    #FunÁ„o que cria uma text box com as percentagens de leitura para a opÁ„o do combobox escolhida para cada um dos elementos da coluna a testar
+    #Fun√ß√£o que cria uma text box com as percentagens de leitura para a op√ß√£o do combobox escolhida para cada um dos elementos da coluna a testar
     perc_leit<-function(h,...)
     {
       #Atualiza-se o valor da janela e coloca-se um grupo na janela
@@ -931,63 +931,63 @@ interface<-function(tabela_original, analise_nome, simulador)
       leit_suc_fim<-c()
       total<-c()
       leit_suc_um<-c()
-      #Para cada uma das vari·veis da coluna a testar
+      #Para cada uma das vari√°veis da coluna a testar
       for (i in 1:length(variaveis))
       {
-        #Cria a tabela sÛ com a vari·vel selecionada
+        #Cria a tabela s√≥ com a vari√°vel selecionada
         tabela_aux<-tabela_a_trabalhar$value[tabela_a_trabalhar$value[[valor_testar]]==variaveis[i],]
-        #sum(tabela_aux[["leitura_obtida"]]) -> Faz a soma de todos os EBs que enviaram a informaÁ„o da leitura para os Sistemas Centrais
+        #sum(tabela_aux[["leitura_obtida"]]) -> Faz a soma de todos os EBs que enviaram a informa√ß√£o da leitura para os Sistemas Centrais
         leit_suc_fim<-c(leit_suc_fim,sum(tabela_aux[["leitura_obtida"]]))
-        #Se for a an·lise de leituras nos EBs
-        if (analise_nome=="An·lise EBs")
+        #Se for a an√°lise de leituras nos EBs
+        if (analise_nome=="An√°lise EBs")
         {
-          #nrow(tabela_aux) -> N˙mero de linhas 
+          #nrow(tabela_aux) -> N√∫mero de linhas 
           total<-c(total,nrow(tabela_aux))
         }
-        #Se for an·lise de leituras nos DTCs
+        #Se for an√°lise de leituras nos DTCs
         else
         {
           #sum(tabela_aux[["qtd_EBs_regi"]]) -> Soma de todas as EBs em analise
           total<-c(total,sum(tabela_aux[["qtd_EBs_regi"]]))
         }
-        #ObtÈm a percentagem de EBs que enviaram a sua informaÁ„o da leitura para os Sistemas Centrais
+        #Obt√©m a percentagem de EBs que enviaram a sua informa√ß√£o da leitura para os Sistemas Centrais
         percentagem<-as.character(round(as.double(leit_suc_fim[i])/total[i]*100,4))
         #Coloca no programa os resultados
-        glabel(paste(paste(paste(paste(paste(paste(paste(paste("N˙mero de leituras (",variaveis[i],sep=""),"): ",sep=""),leit_suc_fim[i],sep=""), " em ",sep=""), total[i], sep=""), " (", sep=""), percentagem, sep=""), "%)", sep=""), container=valor_janela$value)
+        glabel(paste(paste(paste(paste(paste(paste(paste(paste("N√∫mero de leituras (",variaveis[i],sep=""),"): ",sep=""),leit_suc_fim[i],sep=""), " em ",sep=""), total[i], sep=""), " (", sep=""), percentagem, sep=""), "%)", sep=""), container=valor_janela$value)
       }
       #Separador
       glabel("",container=valor_janela$value)
-      #Para cada uma das vari·veis da coluna a testar
+      #Para cada uma das vari√°veis da coluna a testar
       for (i in 1:length(variaveis))
       {
-        #… criada a tabela com valores tais que contÈm a tal vari·vel da coluna a testar
+        #√â criada a tabela com valores tais que cont√©m a tal vari√°vel da coluna a testar
         tabela_aux<-tabela_a_trabalhar$value[tabela_a_trabalhar$value[[valor_testar]]==variaveis[i],]
         
         #Faz a soma de todas as EBs que enviaram a sua leitura ao fim de um dia
         leit_suc_um<-c(leit_suc_um,sum(tabela_aux[["fim_1dia"]]))
-        #ObtÈm a percentagem de EBs que enviaram a sua informaÁ„o da leitura para os Sistemas Centrais no prÛprio dia
+        #Obt√©m a percentagem de EBs que enviaram a sua informa√ß√£o da leitura para os Sistemas Centrais no pr√≥prio dia
         percentagem<-as.character(round(as.double(leit_suc_um[i])/total[i]*100,4))
-        glabel(paste(paste(paste(paste(paste(paste(paste(paste("N˙mero de leituras primeiro dia (",variaveis[i],sep=""),"): ",sep=""),leit_suc_um[i], sep=""), " em ", sep=""),total[i],sep=""), " (",sep=""), percentagem,sep=""), "%)",sep=""),container=valor_janela$value)
+        glabel(paste(paste(paste(paste(paste(paste(paste(paste("N√∫mero de leituras primeiro dia (",variaveis[i],sep=""),"): ",sep=""),leit_suc_um[i], sep=""), " em ", sep=""),total[i],sep=""), " (",sep=""), percentagem,sep=""), "%)",sep=""),container=valor_janela$value)
       }
       #Separador
       glabel("",container=valor_janela$value)
       for (i in 1:length(variaveis))
       {
-        #ObtÈm a percentagem, das EBs que enviaram a informaÁ„o da sua leitura para os Sistemas Centrais, daquelas que consigaram mandar no prÛprio dia
+        #Obt√©m a percentagem, das EBs que enviaram a informa√ß√£o da sua leitura para os Sistemas Centrais, daquelas que consigaram mandar no pr√≥prio dia
         percentagem<-as.character(round(as.double(leit_suc_um[i])/leit_suc_fim[i]*100,4))
         glabel(paste(paste(paste(paste("Percentagem primeiro dia (",variaveis[i],sep=""),"): ",sep=""),percentagem, sep=""), "%", sep=""),container=valor_janela$value)
       }
     }
     
-    #Bot„o que permite mostrar as percentagens
+    #Bot√£o que permite mostrar as percentagens
     perc_func<-gbutton("Percentagem de leituras", "PL", handler=perc_leit)
     add(tmpTestTempPercT,perc_func)
     
-    #Se o ficheiro a analisar for de an·lise ‡s EBs
-    if (analise_nome=="An·lise EBs")
+    #Se o ficheiro a analisar for de an√°lise √†s EBs
+    if (analise_nome=="An√°lise EBs")
     {
-      #FunÁ„o que cria uma text box com a mÈdia dos tempos que as EBs demoraram a enviar a sua informaÁ„o de leitura para os Sistemas Centrais, desde o seu pedido (daqueles que conseguiram enviar)
-      #AlÈm disso, È mostrada o n˙mero de tempos negativos que existem na tabela
+      #Fun√ß√£o que cria uma text box com a m√©dia dos tempos que as EBs demoraram a enviar a sua informa√ß√£o de leitura para os Sistemas Centrais, desde o seu pedido (daqueles que conseguiram enviar)
+      #Al√©m disso, √© mostrada o n√∫mero de tempos negativos que existem na tabela
       tempo_medio<-function(h,...)
       {
         #Atualiza-se o valor da janela e coloca-se um grupo na janela
@@ -998,15 +998,15 @@ interface<-function(tabela_original, analise_nome, simulador)
         valor_testar<-svalue(teste_coluna$value)
         #Retira os valores que existem na coluna a testar
         variaveis<-unique((tabela_a_trabalhar$value[[valor_testar]]))
-        #Para cada uma das vari·veis da coluna a testar
+        #Para cada uma das vari√°veis da coluna a testar
         for (i in 1:length(variaveis))
         {
-          #… criada a tabela com valores tais que contÈm a tal vari·vel da coluna a testar e cujo o valor da coluna "tempo_leit_EB" n„o seja nulo
+          #√â criada a tabela com valores tais que cont√©m a tal vari√°vel da coluna a testar e cujo o valor da coluna "tempo_leit_EB" n√£o seja nulo
           tabela_aux<-tabela_a_trabalhar$value[tabela_a_trabalhar$value[[valor_testar]]==variaveis[i] & !is.na(tabela_a_trabalhar$value[["tempo_leit_EB"]]),]
-          #ObtÈm a mÈdia dos tempos
+          #Obt√©m a m√©dia dos tempos
           media<-mean(tabela_aux[["tempo_leit_EB"]])
-          aux_label<-paste(paste(paste(paste("MÈdia tempos (",variaveis[i],sep=""),"): ",sep=""),as.character(round(as.double(media),4)),sep=""), " horas", sep="")
-          #Caso a tabela n„o tenha sido obtida com o simulador, verifica-se quantos valores negativos foram encontrados na tabela a analisar
+          aux_label<-paste(paste(paste(paste("M√©dia tempos (",variaveis[i],sep=""),"): ",sep=""),as.character(round(as.double(media),4)),sep=""), " horas", sep="")
+          #Caso a tabela n√£o tenha sido obtida com o simulador, verifica-se quantos valores negativos foram encontrados na tabela a analisar
           if (!simulador)
           {
             valores_negativos<-length(tabela_aux[tabela_aux$tempo_leit_EB<0,][["tempo_leit_EB"]])
@@ -1016,29 +1016,29 @@ interface<-function(tabela_original, analise_nome, simulador)
         }
       }
       
-      #Bot„o que permite mostrar os tempos mÈdios 
-      botao_tempo<-gbutton("Tempo mÈdio", "PL", handler=tempo_medio)
+      #Bot√£o que permite mostrar os tempos m√©dios 
+      botao_tempo<-gbutton("Tempo m√©dio", "PL", handler=tempo_medio)
       add(tmpTestTempPercT,botao_tempo)
     }
   }
   
-  #FunÁ„o que cria o teste consoante o caso que se est· a tratar
+  #Fun√ß√£o que cria o teste consoante o caso que se est√° a tratar
   realizar_teste<-function(h,...)
   {
-    #Atualiza-se o valor da janela e coloca-se um gr·fico na janela
+    #Atualiza-se o valor da janela e coloca-se um gr√°fico na janela
     delete(BigGroup,valor_janela$value)
     atualizar_ponteiro(valor_janela,ggroup(horizontal=FALSE, container=BigGroup))
     add(BigGroup,valor_janela$value)
-    #ObtÈm-se o valor da coluna escolhida
+    #Obt√©m-se o valor da coluna escolhida
     valor_testar<-svalue(teste_coluna$value)
     tabela_aux<-droplevels(tabela_a_trabalhar$value)
     #Coluna escolhida
     col_escolhida<-tabela_aux[[valor_testar]]
-    #ObtÈm-se as vari·veis existentes na coluna escolhida
+    #Obt√©m-se as vari√°veis existentes na coluna escolhida
     variaveis<-unique(col_escolhida)
-    #O programa vai retirar todas as opÁıes cujo n˙mero de observaÁıes for abaixo de 3 (No caso dos DTCs, o teste shapiro-wilk sÛ È utilizado se o n˙mero de observaÁıes for superior a 2)
-    texto_aviso<-"Devido ao n˙mero de observaÁıes ser abaixo de 3, as seguintes opÁıes da vari·vel escolhida n„o foram consideradas:"
-    if (analise_nome=="An·lise DTCs")
+    #O programa vai retirar todas as op√ß√µes cujo n√∫mero de observa√ß√µes for abaixo de 3 (No caso dos DTCs, o teste shapiro-wilk s√≥ √© utilizado se o n√∫mero de observa√ß√µes for superior a 2)
+    texto_aviso<-"Devido ao n√∫mero de observa√ß√µes ser abaixo de 3, as seguintes op√ß√µes da vari√°vel escolhida n√£o foram consideradas:"
+    if (analise_nome=="An√°lise DTCs")
     {
       i<-1
       while (i<=length(variaveis))
@@ -1056,23 +1056,23 @@ interface<-function(tabela_original, analise_nome, simulador)
       }
     }
     i<-length(variaveis)
-    #Se no final o n˙mero de opÁıes com mais de 2 observaÁıes for inferior a 2, ent„o o teste n„o ser· realizado
+    #Se no final o n√∫mero de op√ß√µes com mais de 2 observa√ß√µes for inferior a 2, ent√£o o teste n√£o ser√° realizado
     if (i<=1)
     {
-      gmessage("A vari·vel escolhida n„o tem pelo menos duas opÁıes com n˙mero de observaÁıes superior a 2")
+      gmessage("A vari√°vel escolhida n√£o tem pelo menos duas op√ß√µes com n√∫mero de observa√ß√µes superior a 2")
     }
     else
     {
-      #Caso tenha sido encontrado alguma opÁ„o com menos de 3 observaÁıes, È deixado um aviso
-      if (texto_aviso!="Devido ao n˙mero de observaÁıes ser abaixo de 3, as seguintes opÁıes da vari·vel escolhida n„o foram consideradas:")
+      #Caso tenha sido encontrado alguma op√ß√£o com menos de 3 observa√ß√µes, √© deixado um aviso
+      if (texto_aviso!="Devido ao n√∫mero de observa√ß√µes ser abaixo de 3, as seguintes op√ß√µes da vari√°vel escolhida n√£o foram consideradas:")
       {
         gmessage(texto_aviso)
       }
       #Os testes realizados variam consoante a tabela a analisar
-      #Se for a an·lise de DTCs
-      if (analise_nome=="An·lise DTCs")
+      #Se for a an√°lise de DTCs
+      if (analise_nome=="An√°lise DTCs")
       {
-        #ObtÈm-se se pretende realizar o teste para as leituras obtidas ou as leituras obtidas ao fim de 1 dia
+        #Obt√©m-se se pretende realizar o teste para as leituras obtidas ou as leituras obtidas ao fim de 1 dia
         if (svalue(cb_dias_teste)=="Leituras Recebidas")
         {
           depen<-"leitura_obtida"
@@ -1081,64 +1081,64 @@ interface<-function(tabela_original, analise_nome, simulador)
         {
           depen<-"fim_1dia"
         }
-        #ObtÈm uma coluna com as percentagens de cada DTC, consoante as escolhas feitas
+        #Obt√©m uma coluna com as percentagens de cada DTC, consoante as escolhas feitas
         percentagem<-tabela_aux[[depen]]/tabela_aux[["qtd_EBs_regi"]]*100
-        #O programa verifica primeiro se È para utilizar o teste paramÍtrico ou n„o paramÍtrico
+        #O programa verifica primeiro se √© para utilizar o teste param√™trico ou n√£o param√™trico
         nao_parametrico<-funcao_parametrico(tabela_aux,valor_testar,variaveis,depen)
-        #Se o teste a utilizar for paramÍtrico
+        #Se o teste a utilizar for param√™trico
         if (!nao_parametrico)
         {
-          #Teste de Barlett para estudar a homogeneidade de vari‚ncias entre as opÁıes da vari·vel
+          #Teste de Barlett para estudar a homogeneidade de vari√¢ncias entre as op√ß√µes da vari√°vel
           homogeneidade<-bartlett.test(percentagem ~ col_escolhida)
-          #Se houver mais do que duas opÁıes para comparar
+          #Se houver mais do que duas op√ß√µes para comparar
           if (i!=2)
           {
-            #Se o p-valor for inferior a 0.05, rejeita-se a homogeneidade de vari‚ncias, ao nÌvel de signific‚ncia usual, e È utilizado o teste de welch com o teste post-hoc Games-Howell
+            #Se o p-valor for inferior a 0.05, rejeita-se a homogeneidade de vari√¢ncias, ao n√≠vel de signific√¢ncia usual, e √© utilizado o teste de welch com o teste post-hoc Games-Howell
             if (homogeneidade$'Pr(>F)'[1]<0.05)
             {
               str_teste<-"Teste Welch"
               pvalor <- oneway.test(percentagem ~ col_escolhida)$p.value
-              #Devido · n„o homogeneidade 
+              #Devido √° n√£o homogeneidade 
               poolsd <- FALSE
-              #O teste post-hoc È utilizado para comparar os p-valores das opÁıes dois a dois (Games-Howell no caso de se usar o teste de Welch)
+              #O teste post-hoc √© utilizado para comparar os p-valores das op√ß√µes dois a dois (Games-Howell no caso de se usar o teste de Welch)
               metodo_post <- "Games-Howell"
             }
-            #Se aceitar a homogeneidade de vari‚ncias, ao nÌvel de signific‚ncia usual, È utilizado o teste ANOVA com teste post-hoc Tukey
+            #Se aceitar a homogeneidade de vari√¢ncias, ao n√≠vel de signific√¢ncia usual, √© utilizado o teste ANOVA com teste post-hoc Tukey
             else
             {
               str_teste<-"Teste ANOVA"
               pvalor <- anova(lm(percentagem ~ col_escolhida))$'Pr(>F)'[1]
-              #Devido ‡ homogeneidade
+              #Devido √† homogeneidade
               poolsd <- TRUE
-              #O teste post-hoc È utilizado para comparar os p-valores das opÁıes dois a dois (Tukey no caso de se usar o teste ANOVA)
+              #O teste post-hoc √© utilizado para comparar os p-valores das op√ß√µes dois a dois (Tukey no caso de se usar o teste ANOVA)
               metodo_post <- "Tukey"
             }
           }
           else
           {
-            #Em ambos os casos utiliza-se o T-teste. No entanto, eles variam consoante a homogeneidade de vari‚ncias
+            #Em ambos os casos utiliza-se o T-teste. No entanto, eles variam consoante a homogeneidade de vari√¢ncias
             if (homogeneidade$'Pr(>F)'[1]<0.05)
             {
-              str_teste <- "T-Teste (sem homogeneidade de vari‚ncias)"
+              str_teste <- "T-Teste (sem homogeneidade de vari√¢ncias)"
               pvalor <- t.test(percentagem ~ col_escolhida, var.equal=FALSE)$p.value
             }
             else
             {
-              str_teste <- "T-Teste (com homogeneidade de vari‚ncias)"
+              str_teste <- "T-Teste (com homogeneidade de vari√¢ncias)"
               pvalor <- t.test(percentagem ~ col_escolhida, var.equal=TRUE)$p.value
             }
           }
         }
-        #Se o teste for n„o-paramÍtrico
+        #Se o teste for n√£o-param√™trico
         else
         {
-          #No caso de o n˙mero de opÁıes for superior a 2, utiliza-se o teste de Kruskal-wallis
+          #No caso de o n√∫mero de op√ß√µes for superior a 2, utiliza-se o teste de Kruskal-wallis
           if (i!=2)
           {
             str_teste <- "Teste Kruskal-Wallis"
             pvalor<-kruskal.test(percentagem ~ col_escolhida)$p.value
           }
-          #Caso contr·rio, utiliza-se o teste de Wilcoxon
+          #Caso contr√°rio, utiliza-se o teste de Wilcoxon
           else
           {
             str_teste <- "Teste de Wilcoxon"
@@ -1153,41 +1153,41 @@ interface<-function(tabela_original, analise_nome, simulador)
         {
           if (i!=2)
           {
-            glabel("Como o p-valor È abaixo do nÌvel de signific‚ncia 0.05, rejeita-se a hipÛtese de que as mÈdias entre os grupos s„o todas iguais.",container=valor_janela$value)
-            glabel("Isto significa que existe diferenÁas significativas entre, pelo menos, dois dos grupos.", container = valor_janela$value)
+            glabel("Como o p-valor √© abaixo do n√≠vel de signific√¢ncia 0.05, rejeita-se a hip√≥tese de que as m√©dias entre os grupos s√£o todas iguais.",container=valor_janela$value)
+            glabel("Isto significa que existe diferen√ßas significativas entre, pelo menos, dois dos grupos.", container = valor_janela$value)
           }
           else
           {
-            glabel("Como o p-valor È abaixo do nÌvel de signific‚ncia 0.05, rejeita-se a hipÛtese de que as mÈdias entre os dois grupos s„o iguais.",container=valor_janela$value)
-            glabel("Isto significa que existe diferenÁas significativas entre os dois grupos.", container = valor_janela$value)
+            glabel("Como o p-valor √© abaixo do n√≠vel de signific√¢ncia 0.05, rejeita-se a hip√≥tese de que as m√©dias entre os dois grupos s√£o iguais.",container=valor_janela$value)
+            glabel("Isto significa que existe diferen√ßas significativas entre os dois grupos.", container = valor_janela$value)
           }
         }
         else
         {
           if (i!=2)
           {
-            glabel("Como o p-valor È acima do nÌvel de signific‚ncia 0.05, aceita-se a hipÛtese de que as mÈdias entre os grupos s„o todas iguais.",container=valor_janela$value)
-            glabel("Isto significa que n„o existe diferenÁas significativas entre os grupos.",container=valor_janela$value)
+            glabel("Como o p-valor √© acima do n√≠vel de signific√¢ncia 0.05, aceita-se a hip√≥tese de que as m√©dias entre os grupos s√£o todas iguais.",container=valor_janela$value)
+            glabel("Isto significa que n√£o existe diferen√ßas significativas entre os grupos.",container=valor_janela$value)
           }
           else
           {
-            glabel("Como o p-valor È acima do nÌvel de signific‚ncia 0.05, aceita-se a hipÛtese de que as mÈdias entre os dois grupos s„o iguais.",container=valor_janela$value)
-            glabel("Isto significa que n„o existe diferenÁas significativas entre os dois grupos.",container=valor_janela$value)
+            glabel("Como o p-valor √© acima do n√≠vel de signific√¢ncia 0.05, aceita-se a hip√≥tese de que as m√©dias entre os dois grupos s√£o iguais.",container=valor_janela$value)
+            glabel("Isto significa que n√£o existe diferen√ßas significativas entre os dois grupos.",container=valor_janela$value)
           }
         }
         glabel("",container=valor_janela$value)
-        #No caso de o n˙mero de opÁıes ser superior a 2, ent„o verifica-se entre que grupos È que existem diferenÁas significativas
+        #No caso de o n√∫mero de op√ß√µes ser superior a 2, ent√£o verifica-se entre que grupos √© que existem diferen√ßas significativas
         if (i!=2)
         {
           glabel("P-valores entre grupos:",container=valor_janela$value)
-          #No caso paramÍtrico
+          #No caso param√™trico
           if (!nao_parametrico)
           {
             #p-valor entre os grupos
             col_escolhida<-gsub("-","_",col_escolhida)
             #Faz-se o teste posthoc
             teste<-posthocTGH(percentagem,col_escolhida,method=metodo_post)
-            #Escreve-se numa matriz as opÁıes e os p-valores associados entre eles
+            #Escreve-se numa matriz as op√ß√µes e os p-valores associados entre eles
             niveis<-levels(teste$intermediate$x)
             matriz<-data.frame(matrix(NA, nrow = (length(niveis)-1), ncol = (length(niveis)-1)))
             rownames(matriz)<-niveis[-1]
@@ -1219,12 +1219,12 @@ interface<-function(tabela_original, analise_nome, simulador)
               str_aux<-paste(str_aux,"; ",sep="")
             }
           }
-          #No caso n„o paramÍtrico
+          #No caso n√£o param√™trico
           else
           {
             #p-valor entre os grupos
             test<-pairwise.wilcox.test(percentagem,col_escolhida,p.adj='bonferroni',exact=F)$p.value
-            #Escreve-se numa matriz as opÁıes e os p-valores associados entre eles
+            #Escreve-se numa matriz as op√ß√µes e os p-valores associados entre eles
             matriz<-multcompLetters(fullPTable(test),
                                     compare="<",
                                     threshold=0.05, # p-value to use as significance threshold
@@ -1255,12 +1255,12 @@ interface<-function(tabela_original, analise_nome, simulador)
           glabel(str_aux,container=valor_janela$value)
           glabel("",container=valor_janela$value)
         }
-        glabel(paste("Sum·rio de ",valor_testar,sep=""),container=valor_janela$value)
+        glabel(paste("Sum√°rio de ",valor_testar,sep=""),container=valor_janela$value)
       }
-      #Caso seja an·lise ‡s EBs ou ‡s OS
+      #Caso seja an√°lise √†s EBs ou √†s OS
       else
       {
-        if (analise_nome=="An·lise EBs")
+        if (analise_nome=="An√°lise EBs")
         {
           if (svalue(cb_dias_teste)=="Leituras Recebidas")
           {
@@ -1276,8 +1276,8 @@ interface<-function(tabela_original, analise_nome, simulador)
           depen<-"sucesso"
         }
         valido<-FALSE
-        #Utilizador tem de inserir a proporÁ„o que pretende ver realizada
-        per<-ginput("ProporÁ„o a utilizar para o teste",text="",title="ProporÁ„o", icon="question")
+        #Utilizador tem de inserir a propor√ß√£o que pretende ver realizada
+        per<-ginput("Propor√ß√£o a utilizar para o teste",text="",title="Propor√ß√£o", icon="question")
         if (!is.na(as.numeric(per)))
         {
           if (as.numeric(per)>0 & as.numeric(per)<1)
@@ -1287,12 +1287,12 @@ interface<-function(tabela_original, analise_nome, simulador)
         }
         if (valido)
         {
-          #Para cada uma das vari·veis realiza-se o teste binomial e escreve-se no programa
+          #Para cada uma das vari√°veis realiza-se o teste binomial e escreve-se no programa
           for (i in 1:length(variaveis))
           {
             tabela_aux_bin<-tabela_aux[col_escolhida==variaveis[i],]
-            texto_variavel<-paste("Teste binomial para a vari·vel ",variaveis[i],sep="")
-            if (analise_nome=="An·lise EBs")
+            texto_variavel<-paste("Teste binomial para a vari√°vel ",variaveis[i],sep="")
+            if (analise_nome=="An√°lise EBs")
             {
               texto_variavel<-paste(paste(paste(texto_variavel, " (", sep=""),svalue(cb_dias_teste),sep=""), ")", sep="")
             }
@@ -1312,24 +1312,24 @@ interface<-function(tabela_original, analise_nome, simulador)
             glabel("",container=valor_janela$value)
           }
           glabel("",container=valor_janela$value)
-          glabel(paste("MÈdias",sep=""),container=valor_janela$value)
+          glabel(paste("M√©dias",sep=""),container=valor_janela$value)
         }
         else
         {
-          gmessage("Valor de teste inv·lido!")
+          gmessage("Valor de teste inv√°lido!")
         }
       }
-      #Escreve-se no programa um sum·rio das opÁıes estudadas (mÈdia, quadrantes, etc.). No caso de se ter utilizado o teste binomial, sÛ se apresentar· as mÈdias
+      #Escreve-se no programa um sum√°rio das op√ß√µes estudadas (m√©dia, quadrantes, etc.). No caso de se ter utilizado o teste binomial, s√≥ se apresentar√° as m√©dias
       sumarios<-c()
       aux_nomes<-c()
       for (i in 1:length(variaveis))
       {
         aux_nomes<-c(aux_nomes,toString(variaveis[i]))
-        if (analise_nome=="An·lise DTCs")
+        if (analise_nome=="An√°lise DTCs")
         {
           sumarios<-cbind(sumarios, do.call("<-",list(paste("sum_",variaveis[i],sep=""),summary(tabela_aux[tabela_aux[[valor_testar]]==variaveis[i],][[depen]]/tabela_aux[tabela_aux[[valor_testar]]==variaveis[i],][["qtd_EBs_regi"]]*100))))
         }
-        else if (analise_nome=="An·lise EBs")
+        else if (analise_nome=="An√°lise EBs")
         {
           sumarios<-cbind(sumarios, do.call("<-",list(paste("sum_",variaveis[i],sep=""),summary(tabela_aux[tabela_aux[[valor_testar]]==variaveis[i],][[depen]]))))
         }
@@ -1338,7 +1338,7 @@ interface<-function(tabela_original, analise_nome, simulador)
           sumarios<-cbind(sumarios, do.call("<-",list(paste("sum_",variaveis[i],sep=""),summary(tabela_aux[tabela_aux[[valor_testar]]==variaveis[i],]$sucesso))))
         }
       }
-      if (analise_nome=="An·lise DTCs")
+      if (analise_nome=="An√°lise DTCs")
       {
         colnames(sumarios)<-aux_nomes
         s<-cbind(rownames(sumarios),round(sumarios,4))
@@ -1361,54 +1361,54 @@ interface<-function(tabela_original, analise_nome, simulador)
     }
   }
 
-  #CriaÁ„o do bot„o "Realizar teste"
+  #Cria√ß√£o do bot√£o "Realizar teste"
   botao_teste <- gbutton("Realizar Teste", "teste", handler=realizar_teste)
   add(tmpTestTempPercT,botao_teste)
   
   #################################################### Novos intervalos ######################################################
   
-  #FunÁ„o que permite criar novos intervalos para a divis„o de DTCs por EBs (Nota: A tabela È reiniciada, todas as alteraÁıes s„o desfeitas)
+  #Fun√ß√£o que permite criar novos intervalos para a divis√£o de DTCs por EBs (Nota: A tabela √© reiniciada, todas as altera√ß√µes s√£o desfeitas)
   novos_intervalos<-function(h,...)
   {
     visible(window)<-FALSE
     
-    #CriaÁ„o de grupos de EBs
+    #Cria√ß√£o de grupos de EBs
     divisoes_aux<-funcao_divisao(min(tabela_original[["qtd_EBs_regi"]]),max(tabela_original[["qtd_EBs_regi"]]))
-    #Se a operaÁ„o n„o foi cancelada
+    #Se a opera√ß√£o n√£o foi cancelada
     if (!all(divisoes_aux==c(-1)))
     {
-      #O programa verifica se as divisıes inseridas s„o iguais ‡s que j· estavam inseridas
+      #O programa verifica se as divis√µes inseridas s√£o iguais √†s que j√° estavam inseridas
       if (all(divisoes_aux==divisoes$value) & !is.null(divisoes$value))
       {
-        gmessage("As alteraÁıes n„o foram realizadas, porque os intervalos introduzidos s„o iguais aos que havia anteriormente!")
+        gmessage("As altera√ß√µes n√£o foram realizadas, porque os intervalos introduzidos s√£o iguais aos que havia anteriormente!")
       }
       else
       {
-        #Verifica se todos os intervalos contÍm pelo menos um elemento
+        #Verifica se todos os intervalos cont√™m pelo menos um elemento
         divisoes_aux<-funcao_verificar_divisoes(tabela_original, divisoes_aux)
-        #Se a operaÁ„o n„o foi cancelada
+        #Se a opera√ß√£o n√£o foi cancelada
         if (length(divisoes_aux)!=0)
         {
-          #Apaga os comboboxs que se fizeram as alteraÁıes. Caso as opÁıes de gr·ficos e testes n„o estiverem presentes no programa, adicionar posteriormente a realizaÁ„o das operaÁıes
+          #Apaga os comboboxs que se fizeram as altera√ß√µes. Caso as op√ß√µes de gr√°ficos e testes n√£o estiverem presentes no programa, adicionar posteriormente a realiza√ß√£o das opera√ß√µes
           if (length(colunas_teste$value)!=0)
           {
             delete(tmpTestTempPercT,botao_teste)
-            if (analise_nome=="An·lise DTCs" | analise_nome=="An·lise EBs")
+            if (analise_nome=="An√°lise DTCs" | analise_nome=="An√°lise EBs")
             {
-              if (analise_nome=="An·lise EBs")
+              if (analise_nome=="An√°lise EBs")
               {
                 delete(tmpTestTempPercT,botao_tempo)
               }
               delete(tmpTestTempPercT,perc_func)
             }
-            if (analise_nome=="An·lise DTCs")
+            if (analise_nome=="An√°lise DTCs")
             {
               delete(tmpTestGraObriOpc,botao_qq)
               delete(tmpTestGraOpc,botao_big)
             }
             delete(tmpTestGraOpc,botao_plot)
             delete(tmpTestOpcGra,cb_opcao_graficos)
-            if (analise_nome=="An·lise EBs" | analise_nome=="An·lise DTCs")
+            if (analise_nome=="An√°lise EBs" | analise_nome=="An√°lise DTCs")
             {
               delete(tmpTestOpcGra,cb_dias_teste)
             }
@@ -1420,7 +1420,7 @@ interface<-function(tabela_original, analise_nome, simulador)
           delete(tmpAlt,alterar_opcao$value)
           delete(tmpAlt,alterar_coluna$value)
           
-          #Atualiza as divisıes feitas
+          #Atualiza as divis√µes feitas
           atualizar_ponteiro(divisoes,divisoes_aux)
           
           #Colocar coluna em tabela
@@ -1429,12 +1429,12 @@ interface<-function(tabela_original, analise_nome, simulador)
           atualizar_ponteiro(tabela_a_trabalhar,tabela_aux)
           atualizar_ponteiro(tabela_sem_alteracoes,tabela_a_trabalhar$value)
           
-          #Atualiza as colunas que se poder„o alterar
-          if (analise_nome=="An·lise DTCs") #DTCs
+          #Atualiza as colunas que se poder√£o alterar
+          if (analise_nome=="An√°lise DTCs") #DTCs
           {
             colunas_retirar<-which(names(tabela_a_trabalhar$value) %in% c("qtd_EBs_regi","fim_1dia","leitura_obtida","tempo_medio"))
           }
-          else if (analise_nome=="An·lise EBs") #EBs
+          else if (analise_nome=="An√°lise EBs") #EBs
           {
             colunas_retirar<-which(names(tabela_a_trabalhar$value) %in% c("qtd_EBs_regi","fim_1dia","leitura_obtida","tempo_leit_EB"))
           }
@@ -1452,8 +1452,8 @@ interface<-function(tabela_original, analise_nome, simulador)
             atualizar_ponteiro(colunas_alterar,gsub(" ", "", colnames(summary(tabela_a_trabalhar$value)), fixed = TRUE))
           }
           
-          #Atualiza as colunas que se poder„o testar
-          if (analise_nome=="An·lise EBs")
+          #Atualiza as colunas que se poder√£o testar
+          if (analise_nome=="An√°lise EBs")
           {
             colunas_retirar<-which(colunas_alterar$value %in% c("config","marca_DTC","firmware"))
             if (!identical(colunas_retirar, integer(0)))
@@ -1470,21 +1470,21 @@ interface<-function(tabela_original, analise_nome, simulador)
             atualizar_ponteiro(colunas_teste,colunas_alterar$value)
           }
           
-          #Atualiza as opÁıes de cada uma das colunas que se poder„o alterar 
+          #Atualiza as op√ß√µes de cada uma das colunas que se poder√£o alterar 
           aux_lista_opcoes<-list()
           for (i in 1:length(colunas_alterar$value))
           {
             aux_lista_opcoes[[colunas_alterar$value[i]]]<-c(as.character(unique(tabela_a_trabalhar$value[[colunas_alterar$value[i]]])),"Todos")
           }
           
-          #Atualiza as opÁıes de cada uma das colunas que se poder„o testar
+          #Atualiza as op√ß√µes de cada uma das colunas que se poder√£o testar
           aux_lista_opcoes_qq<-list()
           for (i in 1:length(colunas_teste$value))
           {
             aux_lista_opcoes_qq[[colunas_teste$value[i]]]<-as.character(unique(tabela_a_trabalhar$value[[colunas_teste$value[i]]]))
           }
           
-          #Atualiza todas as alteraÁıes feitas
+          #Atualiza todas as altera√ß√µes feitas
           atualizar_ponteiro(lista_opcoes,aux_lista_opcoes)
           atualizar_ponteiro(alterar_coluna,gcombobox(colunas_alterar$value, handler=alterar_coluna_opcao))
           atualizar_ponteiro(alterar_opcao,gcombobox(lista_opcoes$value[[colunas_alterar$value[1]]]))
@@ -1492,28 +1492,28 @@ interface<-function(tabela_original, analise_nome, simulador)
           atualizar_ponteiro(teste_coluna,gcombobox(colunas_teste$value, handler=teste_coluna_opcao))
           atualizar_ponteiro(teste_opcao, gcombobox(lista_opcoes_qq$value[[teste_coluna$value[1]]]))
           
-          #Adiciona os comboboxs e botıes ao programa
+          #Adiciona os comboboxs e bot√µes ao programa
           add(tmpAlt,alterar_coluna$value)
           add(tmpAlt,alterar_opcao$value)
           add(tmpAlt,botao_alterar)
           
           add(tmpTestVar, teste_coluna$value)
           add(tmpTestVar, teste_opcao$value)      
-          if (analise_nome=="An·lise EBs" | analise_nome=="An·lise DTCs")
+          if (analise_nome=="An√°lise EBs" | analise_nome=="An√°lise DTCs")
           {
             add(tmpTestOpcGra,cb_dias_teste)
           }
           add(tmpTestOpcGra,cb_opcao_graficos)
           add(tmpTestGraOpc,botao_plot)
-          if (analise_nome=="An·lise DTCs")
+          if (analise_nome=="An√°lise DTCs")
           {
             add(tmpTestGraOpc,botao_big)
             add(tmpTestGraObriOpc,botao_qq)
           }
-          if (analise_nome=="An·lise DTCs" | analise_nome=="An·lise EBs")
+          if (analise_nome=="An√°lise DTCs" | analise_nome=="An√°lise EBs")
           {
             add(tmpTestTempPercT,perc_func)
-            if (analise_nome=="An·lise EBs")
+            if (analise_nome=="An√°lise EBs")
             {
               add(tmpTestTempPercT,botao_tempo)
             }
@@ -1529,37 +1529,37 @@ interface<-function(tabela_original, analise_nome, simulador)
   #Cria frame dentro do frame "Teste" para criar novos intervalos
   tmpInt <- gframe("Definir Novos Intervalos", container=group)
   
-  #Bot„o que permite criar novos intervalos
+  #Bot√£o que permite criar novos intervalos
   botao_def_int<-gbutton("Novos Intervalos", "intervalos", handler=novos_intervalos)
   add(tmpInt, botao_def_int)
   
   ################################################## Reiniciar Tabela ########################################################
   
-  #FunÁ„o que apaga todas as alteraÁıes feitas, incluÌndo a coluna dos intervalos (caso tenha sido adicionado intervalos)
+  #Fun√ß√£o que apaga todas as altera√ß√µes feitas, inclu√≠ndo a coluna dos intervalos (caso tenha sido adicionado intervalos)
   reiniciar_val<-function(h,...)
   {
-    gconfirm("Deseja reiniciar o programa? Todas as alteraÁıes feitas ser„o desfeitas!", title = "Reiniciar tabela", icon = "question", handler = function(h,...)
+    gconfirm("Deseja reiniciar o programa? Todas as altera√ß√µes feitas ser√£o desfeitas!", title = "Reiniciar tabela", icon = "question", handler = function(h,...)
     {
-      #Apaga os comboboxs que se fizeram as alteraÁıes. Caso as opÁıes de gr·ficos e testes n„o estiverem presentes no programa, adicionar posteriormente a realizaÁ„o das operaÁıes
+      #Apaga os comboboxs que se fizeram as altera√ß√µes. Caso as op√ß√µes de gr√°ficos e testes n√£o estiverem presentes no programa, adicionar posteriormente a realiza√ß√£o das opera√ß√µes
       if (length(colunas_teste$value)!=0)
       {
         delete(tmpTestTempPercT,botao_teste)
-        if (analise_nome=="An·lise DTCs" | analise_nome=="An·lise EBs")
+        if (analise_nome=="An√°lise DTCs" | analise_nome=="An√°lise EBs")
         {
-          if (analise_nome=="An·lise EBs")
+          if (analise_nome=="An√°lise EBs")
           {
             delete(tmpTestTempPercT,botao_tempo)
           }
           delete(tmpTestTempPercT,perc_func)
         }
-        if (analise_nome=="An·lise DTCs")
+        if (analise_nome=="An√°lise DTCs")
         {
           delete(tmpTestGraObriOpc,botao_qq)
           delete(tmpTestGraOpc,botao_big)
         }
         delete(tmpTestGraOpc,botao_plot)
         delete(tmpTestOpcGra,cb_opcao_graficos)
-        if (analise_nome=="An·lise EBs" | analise_nome=="An·lise DTCs")
+        if (analise_nome=="An√°lise EBs" | analise_nome=="An√°lise DTCs")
         {
           delete(tmpTestOpcGra,cb_dias_teste)
         }
@@ -1575,12 +1575,12 @@ interface<-function(tabela_original, analise_nome, simulador)
       atualizar_ponteiro(tabela_a_trabalhar,tabela_original)
       atualizar_ponteiro(tabela_sem_alteracoes,tabela_a_trabalhar$value)
       
-      #Atualiza as colunas que se poder„o alterar
-      if (analise_nome=="An·lise DTCs") #DTCs
+      #Atualiza as colunas que se poder√£o alterar
+      if (analise_nome=="An√°lise DTCs") #DTCs
       {
         colunas_retirar<-which(names(tabela_a_trabalhar$value) %in% c("qtd_EBs_regi","fim_1dia","leitura_obtida","tempo_medio"))
       }
-      else if (analise_nome=="An·lise EBs") #EBs
+      else if (analise_nome=="An√°lise EBs") #EBs
       {
         colunas_retirar<-which(names(tabela_a_trabalhar$value) %in% c("qtd_EBs_regi","fim_1dia","leitura_obtida","tempo_leit_EB"))
       }
@@ -1598,8 +1598,8 @@ interface<-function(tabela_original, analise_nome, simulador)
         atualizar_ponteiro(colunas_alterar,gsub(" ", "", colnames(summary(tabela_a_trabalhar$value)), fixed = TRUE))
       }
       
-      #Atualiza as colunas que se poder„o testar
-      if (analise_nome=="An·lise EBs")
+      #Atualiza as colunas que se poder√£o testar
+      if (analise_nome=="An√°lise EBs")
       {
         colunas_retirar<-which(colunas_alterar$value %in% c("config","marca_DTC","firmware"))
         if (!identical(colunas_retirar, integer(0)))
@@ -1616,21 +1616,21 @@ interface<-function(tabela_original, analise_nome, simulador)
         atualizar_ponteiro(colunas_teste,colunas_alterar$value)
       }
       
-      #Atualiza as opÁıes de cada uma das colunas que se poder„o alterar 
+      #Atualiza as op√ß√µes de cada uma das colunas que se poder√£o alterar 
       aux_lista_opcoes<-list()
       for (i in 1:length(colunas_alterar$value))
       {
         aux_lista_opcoes[[colunas_alterar$value[i]]]<-c(as.character(unique(tabela_a_trabalhar$value[[colunas_alterar$value[i]]])),"Todos")
       }
       
-      #Atualiza as opÁıes de cada uma das colunas que se poder„o testar
+      #Atualiza as op√ß√µes de cada uma das colunas que se poder√£o testar
       aux_lista_opcoes_qq<-list()
       for (i in 1:length(colunas_teste$value))
       {
         aux_lista_opcoes_qq[[colunas_teste$value[i]]]<-as.character(unique(tabela_a_trabalhar$value[[colunas_teste$value[i]]]))
       }
       
-      #Atualiza todas as alteraÁıes feitas
+      #Atualiza todas as altera√ß√µes feitas
       atualizar_ponteiro(lista_opcoes,aux_lista_opcoes)
       atualizar_ponteiro(alterar_coluna,gcombobox(colunas_alterar$value, handler=alterar_coluna_opcao))
       atualizar_ponteiro(alterar_opcao,gcombobox(lista_opcoes$value[[colunas_alterar$value[1]]]))
@@ -1639,7 +1639,7 @@ interface<-function(tabela_original, analise_nome, simulador)
       atualizar_ponteiro(teste_opcao, gcombobox(lista_opcoes_qq$value[[teste_coluna$value[1]]]))
       atualizar_ponteiro(divisoes,c())
       
-      #Adiciona os comboboxs e botıes ao programa
+      #Adiciona os comboboxs e bot√µes ao programa
       add(tmpAlt,alterar_coluna$value)
       add(tmpAlt,alterar_opcao$value)
       add(tmpAlt,botao_alterar)
@@ -1647,21 +1647,21 @@ interface<-function(tabela_original, analise_nome, simulador)
       add(tmpTestVar, teste_coluna$value)
       add(tmpTestVar, teste_opcao$value)      
           
-      if (analise_nome=="An·lise EBs" | analise_nome=="An·lise DTCs")
+      if (analise_nome=="An√°lise EBs" | analise_nome=="An√°lise DTCs")
       {
         add(tmpTestOpcGra,cb_dias_teste)
       }
       add(tmpTestOpcGra,cb_opcao_graficos)
       add(tmpTestGraOpc,botao_plot)
-      if (analise_nome=="An·lise DTCs")
+      if (analise_nome=="An√°lise DTCs")
       {
         add(tmpTestGraOpc,botao_big)
         add(tmpTestGraObriOpc,botao_qq)
       }
-      if (analise_nome=="An·lise DTCs" | analise_nome=="An·lise EBs")
+      if (analise_nome=="An√°lise DTCs" | analise_nome=="An√°lise EBs")
       {
         add(tmpTestTempPercT,perc_func)
-        if (analise_nome=="An·lise EBs")
+        if (analise_nome=="An√°lise EBs")
         {
           add(tmpTestTempPercT,botao_tempo)
         }
@@ -1673,39 +1673,39 @@ interface<-function(tabela_original, analise_nome, simulador)
   #Cria frame dentro do frame "Teste" para reiniciar a tabela
   tmpRei <- gframe("Reiniciar Tabela", container=group)
   
-  #Bot„o que permite reiniciar tabela
+  #Bot√£o que permite reiniciar tabela
   botao_reiniciar <-gbutton("Reiniciar Tabela", "reiniciar", handler=reiniciar_val)
   add(tmpRei,botao_reiniciar)
   
   ################################################ Gravar em Ficheiro ########################################################
   
   
-  if ((analise_nome=="An·lise EBs" | analise_nome=="An·lise OS") & !simulador)
+  if ((analise_nome=="An√°lise EBs" | analise_nome=="An√°lise OS") & !simulador)
   {
-    #Cria frame para gravar informaÁ„o num ficheiro
+    #Cria frame para gravar informa√ß√£o num ficheiro
     tmpGra <- gframe("Gravar Em Ficheiro", container=group, horizontal = FALSE)
     
-    #FunÁ„o que permite gravar a informaÁ„o selecionada pelo utilizador para um ficheiro .csv
+    #Fun√ß√£o que permite gravar a informa√ß√£o selecionada pelo utilizador para um ficheiro .csv
     gravar_ficheiro<-function(h,...)
     {
       visible(window) <- FALSE
       #Nome a dar ao ficheiro
       nome_ficheiro<-ginput("Nome a dar ao ficheiro",text="",title="Nome do Ficheiro", icon="question")
-      #Verifica se operaÁ„o foi cancelada
+      #Verifica se opera√ß√£o foi cancelada
       if (!is.na(nome_ficheiro))
       {
         realizar_ope<-TRUE
         nome_ficheiro<-paste(nome_ficheiro, ".csv", sep="")
-        #Se n„o foi introduzido nenhum valor
+        #Se n√£o foi introduzido nenhum valor
         if (nome_ficheiro==".csv")
         {
-          gmessage("… necess·rio introduzir um nome para o ficheiro!", title="Erro", icon="error")
+          gmessage("√â necess√°rio introduzir um nome para o ficheiro!", title="Erro", icon="error")
           realizar_ope<-FALSE
         }
-        #Se o ficheiro existir, o programa pergunta se o utilizador quer substituir o ficheiro existente e continuar com a operaÁ„o
+        #Se o ficheiro existir, o programa pergunta se o utilizador quer substituir o ficheiro existente e continuar com a opera√ß√£o
         else if (file.exists(nome_ficheiro))
         {
-          if (!gconfirm("J· existe um ficheiro com esse nome. Se continuar o ficheiro ser· substituÌdo. Pretende continuar?"))
+          if (!gconfirm("J√° existe um ficheiro com esse nome. Se continuar o ficheiro ser√° substitu√≠do. Pretende continuar?"))
           {
             realizar_ope<-FALSE
           }
@@ -1716,40 +1716,40 @@ interface<-function(tabela_original, analise_nome, simulador)
         }
         if (realizar_ope)
         {
-          #As caracterÌsticas a gravar ser„o guardadas nos vetores seguintes
+          #As caracter√≠sticas a gravar ser√£o guardadas nos vetores seguintes
           carac_dtc<-c()
           carac_eb<-c()
           carac_dtc_eb<-c()
-          #Tabela sem as alteraÁıes feitas
+          #Tabela sem as altera√ß√µes feitas
           tabela_aux<-tabela_sem_alteracoes$value
           i<-1
-          #Vetor que contÈm dados que n„o dependem do DTC ou EB (Ex: dias da semana, nome da OS)
+          #Vetor que cont√©m dados que n√£o dependem do DTC ou EB (Ex: dias da semana, nome da OS)
           dados_est<-c()
           #Para cada coluna da coluna
           while (i<=length(tabela_aux))
           {
-            #Se a coluna n„o for a primeira (dia da semana), "qtd_EBs_regi_divisoes" ou "nome_OS" (no caso da tabela for de an·lise ‡s OS)
+            #Se a coluna n√£o for a primeira (dia da semana), "qtd_EBs_regi_divisoes" ou "nome_OS" (no caso da tabela for de an√°lise √†s OS)
             if (i!=1 & colnames(tabela_aux)[i]!="qtd_EBs_regi_divisoes" & colnames(tabela_aux)[i]!="nome_OS")
             {
-              #Se a coluna n„o for do tipo fator
+              #Se a coluna n√£o for do tipo fator
               if (sapply(tabela_aux, class)[i]!="factor")
               {
-                #Retiram-se essas colunas para a an·lise
+                #Retiram-se essas colunas para a an√°lise
                 tabela_aux<-tabela_aux[-i]
               }
               else
               {
-                #ObtÈm-se o nome dessa coluna
+                #Obt√©m-se o nome dessa coluna
                 nome_carac<-colnames(tabela_aux)[i]
-                #O programa pergunta ao utilizador se pretende considerar a caracterÌstica na gravaÁ„o do ficheiro
-                if (gconfirm(paste(paste("Considerar a caracterÌstica ", nome_carac, sep=""), "?", sep="")))
+                #O programa pergunta ao utilizador se pretende considerar a caracter√≠stica na grava√ß√£o do ficheiro
+                if (gconfirm(paste(paste("Considerar a caracter√≠stica ", nome_carac, sep=""), "?", sep="")))
                 {
-                  #Se sim, o utilizador indica se È uma caracterÌstica do DTC, EB ou DTC/EB
-                  if (gconfirm("CaracterÌstica DTC?", title = nome_carac, icon = "question"))
+                  #Se sim, o utilizador indica se √© uma caracter√≠stica do DTC, EB ou DTC/EB
+                  if (gconfirm("Caracter√≠stica DTC?", title = nome_carac, icon = "question"))
                   {
                     carac_dtc<-cbind(carac_dtc, i)
                   }
-                  else if (gconfirm("CaracterÌstica EB?", title = nome_carac, icon = "question"))
+                  else if (gconfirm("Caracter√≠stica EB?", title = nome_carac, icon = "question"))
                   {
                     carac_eb<-cbind(carac_eb,i)
                   }
@@ -1759,7 +1759,7 @@ interface<-function(tabela_original, analise_nome, simulador)
                   }
                   i<-i+1
                 }
-                #Caso contr·rio, retira-se essa coluna da tabela
+                #Caso contr√°rio, retira-se essa coluna da tabela
                 else
                 {
                   tabela_aux<-tabela_aux[-i]
@@ -1772,8 +1772,8 @@ interface<-function(tabela_original, analise_nome, simulador)
               i<-i+1
             }
           }
-          #Obter o nome da coluna com os valores do sucesso ou insucesso de envio de leitura/realizaÁ„o da OS dependendo da tabela a utilizar
-          if (analise_nome=="An·lise EBs")
+          #Obter o nome da coluna com os valores do sucesso ou insucesso de envio de leitura/realiza√ß√£o da OS dependendo da tabela a utilizar
+          if (analise_nome=="An√°lise EBs")
           {
             depend<-"fim_1dia"
           }
@@ -1781,12 +1781,12 @@ interface<-function(tabela_original, analise_nome, simulador)
           {
             depend<-"sucesso"
           }
-          #A tabela_unica ser· uma tabela com todas as combinaÁıes existentes na tabela considerada anteriormente
+          #A tabela_unica ser√° uma tabela com todas as combina√ß√µes existentes na tabela considerada anteriormente
           tabela_unica<-uniquecombs(tabela_aux,ordered=FALSE)
-          #Acrescenta-se ao nome das colunas as colunas "num_vezes","IC_inf","IC_sup","media" e essas colunas, inicialmente, ter„o o valor 0
+          #Acrescenta-se ao nome das colunas as colunas "num_vezes","IC_inf","IC_sup","media" e essas colunas, inicialmente, ter√£o o valor 0
           n_colunas<-c(colnames(tabela_unica),"num_vezes","IC_inf","IC_sup","media")
           tabela_a_gravar<-cbind(tabela_unica, 0, 0, 0, 0)
-          #As posiÁıes das colunas ser„o adicionados ao vetor com os dados estatÌsticos 
+          #As posi√ß√µes das colunas ser√£o adicionados ao vetor com os dados estat√≠sticos 
           for (j in i:(i+3))
           {
             dados_est<-cbind(dados_est,j)
@@ -1794,44 +1794,44 @@ interface<-function(tabela_original, analise_nome, simulador)
           valor_col_adi<-i+4
           #Nome das colunas do ficheiro a gravar
           colnames(tabela_a_gravar)<-n_colunas
-          #Cria-se uma janela que indica a percentagem realizada da operaÁ„o
+          #Cria-se uma janela que indica a percentagem realizada da opera√ß√£o
           mens_jan<-gwindow()
           mens<-ggroup(container=mens_jan, horizontal = FALSE)
           glabel("Gravar Dados Ficheiros:", container=mens)
-          mens_label<-glabel("0% concluÌdo")
+          mens_label<-glabel("0% conclu√≠do")
           add(mens,mens_label)
-          #RealizaÁ„o da operaÁ„o gravar em ficheiro
+          #Realiza√ß√£o da opera√ß√£o gravar em ficheiro
           l <- unlist(apply(tabela_aux, 2, list), recursive=F)
           for (i in 1:length(tabela_unica[,1]))
           {
-            #Procedimento feito para obter cada combinaÁ„o da tabela anteriormente obtida
+            #Procedimento feito para obter cada combina√ß√£o da tabela anteriormente obtida
             logic <- mapply(function(x,y)x==y, l, tabela_unica[i,])
             linhas_cons<-which(.rowSums(logic, m=nrow(logic), n=ncol(logic)) == ncol(logic))
-            #Da tabela original, obter apenas as linhas que coincidem com a combinaÁ„o a testar
+            #Da tabela original, obter apenas as linhas que coincidem com a combina√ß√£o a testar
             tabela_teste<-tabela_sem_alteracoes$value[linhas_cons,]
             #Valores que obtiveram sucesso
             num_suc<-length(tabela_teste[tabela_teste[[depend]]==1,][[depend]])
-            #valores que n„o obtiveram sucesso
+            #valores que n√£o obtiveram sucesso
             num_insuc<-length(tabela_teste[tabela_teste[[depend]]==0,][[depend]])
-            #Na coluna "num_vezes", gravar o n˙mero de EBs com a combinaÁ„o a estudar
+            #Na coluna "num_vezes", gravar o n√∫mero de EBs com a combina√ß√£o a estudar
             tabela_a_gravar[["num_vezes"]][i]<-length(tabela_teste[,1])
-            #Realiza o teste binomial para os sucessos e insucessos da combinaÁ„o
+            #Realiza o teste binomial para os sucessos e insucessos da combina√ß√£o
             teste<-binom.test(c(num_suc,num_insuc), p = 0.8)
-            #ObtÈm-se, respetivamente, o intervalo de confianÁa inferior, superior e a mÈdia estimada e grava na tabela a gravar
+            #Obt√©m-se, respetivamente, o intervalo de confian√ßa inferior, superior e a m√©dia estimada e grava na tabela a gravar
             tabela_a_gravar[["IC_inf"]][i]<-teste$conf.int[1]
             tabela_a_gravar[["IC_sup"]][i]<-teste$conf.int[2]
             tabela_a_gravar[["media"]][i]<-teste$estimate
-            #Atualiza-se a janela da percentagem realizada da operaÁ„o
+            #Atualiza-se a janela da percentagem realizada da opera√ß√£o
             delete(mens,mens_label)
-            mens_label<-glabel(paste(round((i-1)/length(tabela_unica[,1])*100,2),"% concluÌdo",sep=""))
+            mens_label<-glabel(paste(round((i-1)/length(tabela_unica[,1])*100,2),"% conclu√≠do",sep=""))
             add(mens,mens_label)
           }
-          #Depois de obter os dados todos, organiza-se a informaÁ„o de forma a ficar
-          #1∫ -> CaracterÌsticas do DTC
-          #2∫ -> CaracterÌsticas das EBs
-          #3∫ -> CaracterÌsticas dos DTCs/EBs
-          #4∫ -> Dados EstatÌsticos
-          #Nota: Em cada um destes pontos h· uma coluna em branco a separ·-los
+          #Depois de obter os dados todos, organiza-se a informa√ß√£o de forma a ficar
+          #1¬∫ -> Caracter√≠sticas do DTC
+          #2¬∫ -> Caracter√≠sticas das EBs
+          #3¬∫ -> Caracter√≠sticas dos DTCs/EBs
+          #4¬∫ -> Dados Estat√≠sticos
+          #Nota: Em cada um destes pontos h√° uma coluna em branco a separ√°-los
           tabela_a_gravar<-cbind(tabela_a_gravar,"","","")
           colnames(tabela_a_gravar)[valor_col_adi]<-""
           carac_dtc<-cbind(carac_dtc,valor_col_adi)
@@ -1845,21 +1845,21 @@ interface<-function(tabela_original, analise_nome, simulador)
           tabela_a_gravar<-tabela_a_gravar[,carac_ordem]
           #Gravar a tabela no ficheiro
           write.table(tabela_a_gravar, file = nome_ficheiro, quote = FALSE, row.names=FALSE,col.names=TRUE, sep=";")
-          #Apagar a caixa das percentagens de realizaÁ„o
+          #Apagar a caixa das percentagens de realiza√ß√£o
           dispose(mens_jan)
         }
       }
       visible(window) <- TRUE
     }
     
-    #Bot„o que permite gravar os dados da tabela num ficheiro
+    #Bot√£o que permite gravar os dados da tabela num ficheiro
     botao_gravar <-gbutton("Gravar", "gravar", handler=gravar_ficheiro)
     add(tmpGra,botao_gravar)
   }
   
   ################################################# Encerrar Programa ########################################################
   
-  #Handler que avisa o utilizador que est· a encerrar o programa
+  #Handler que avisa o utilizador que est√° a encerrar o programa
   addHandlerUnrealize(window, handler = function(h,...) {
     val <- gconfirm("Deseja realmente fechar o programa?", parent=h$obj)
     if(as.logical(val))
@@ -1878,12 +1878,12 @@ main<-function()
   #Nome do ficheiro a utilizar
   nome<-gfile(text = "Selecione o ficheiro a utilizar",
               filter = list("Ficheiros csv" = list(patterns = c("*.csv"))), #Ficheiro a utilizar: *.csv
-              quote = FALSE, #N„o acrescenta aspas ao nome do ficheiro utilizado
+              quote = FALSE, #N√£o acrescenta aspas ao nome do ficheiro utilizado
               type = "open", #Abrir ficheiro
               initialfilename = "TABELA_LEITURAS_DTC.csv")
   if (!is.na(nchar(nome))) #Se utilizador selecionou um ficheiro
   {
-    tabela<-read.csv(file=nome,head=TRUE,sep=";") #LÍ tabela selecionada
+    tabela<-read.csv(file=nome,head=TRUE,sep=";") #L√™ tabela selecionada
     #attach -> Os objetos da tabela podem ser acedidos pelos seus nomes
     #detach -> Os objetos da tabela deixam de ser acedidos pelos nomes
     attach(tabela)
@@ -1896,34 +1896,34 @@ main<-function()
     {
       simulador<-FALSE
     }
-    # Se a tabela contiver a vari·vel "tempo_medio", a tabela È de an·lise das leituras nos DTCs
+    # Se a tabela contiver a vari√°vel "tempo_medio", a tabela √© de an√°lise das leituras nos DTCs
     if (exists("tempo_medio"))
     {
       detach(tabela)
-      opcao_esc<-"An·lise DTCs"
+      opcao_esc<-"An√°lise DTCs"
     }
-    # Se a tabela contiver a vari·vel "tempo_leit_EB", a tabela È de an·lise das leituras nas EBs
+    # Se a tabela contiver a vari√°vel "tempo_leit_EB", a tabela √© de an√°lise das leituras nas EBs
     else if (exists("tempo_leit_EB"))
     {
       detach(tabela)
-      opcao_esc<-"An·lise EBs"
+      opcao_esc<-"An√°lise EBs"
     }
-    # Se a tabela contiver a vari·vel "tempo_OS", a tabela È de an·lise das ordens de serviÁo
+    # Se a tabela contiver a vari√°vel "tempo_OS", a tabela √© de an√°lise das ordens de servi√ßo
     else if (exists("tempo_OS"))
     {
       detach(tabela)
-      opcao_esc<-"An·lise OS"
+      opcao_esc<-"An√°lise OS"
     }
-    # Se nenhuma das opÁıes existir, a tabela n„o È v·lida
+    # Se nenhuma das op√ß√µes existir, a tabela n√£o √© v√°lida
     else
     {
       detach(tabela)
       existe<-FALSE
-      gmessage("Tabela inv·lida!", title="Erro",
+      gmessage("Tabela inv√°lida!", title="Erro",
                icon="error")
       return(FALSE)
     }
-    #criaÁ„o do interface
+    #cria√ß√£o do interface
     interface(tabela, opcao_esc, simulador)
   }
 }
